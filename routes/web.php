@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Controllers\AreaScopeController;
+use App\Http\Controllers\Dashboard\CitizenDashboardController;
+use App\Http\Controllers\Dashboard\TreasurerDashboardController;
 use App\Http\Controllers\Dashboard\WasteBankDashboardController;
+use App\Http\Controllers\PaymentCategoryController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrashCategoryController;
 use App\Http\Controllers\TreasurerController;
+use App\Http\Controllers\WasteBankCitizenController;
 use App\Http\Controllers\WasteBankController;
 use Illuminate\Support\Facades\Route;
 
@@ -69,8 +74,24 @@ Route::middleware(['auth', 'role:wastebank_officer'])->group(function () {
     Route::get('/wastebank_officer/waste_bank/{id}', [WasteBankController::class, 'show'])->name('waste_bank.show');
 });
     
-Route::get('citizen', function(){
-    return'Hello warga';
-})->middleware(['auth', 'verified', 'role:citizen']);
+Route::middleware(['auth', 'role:citizen'])->group(function () {
+    Route::get('/citizen', [CitizenDashboardController::class, 'index'])->name('citizen.dashboard');
+    Route::get('/citizen/waste_bank', [WasteBankCitizenController::class, 'index'])->name('waste_bank.index');   
+    Route::get('/citizen/waste_bank/{id}', [WasteBankCitizenController::class, 'show'])->name('waste_bank.show');
+
+    Route::get('/citizen/payment', [PaymentsController::class, 'index'])->name('payment.index');
+    Route::get('/citizen/payment/create', [PaymentsController::class, 'create'])->name('payment.create');
+});
+
+Route::middleware(['auth', 'role:treasurer'])->group(function () {
+    Route::get('/treasurer', [TreasurerDashboardController::class, 'index'])->name('treasurer.dashboard');
+    Route::get('/treasurer/payment_category', [PaymentCategoryController::class, 'index'])->name('payment_category');
+    Route::get('/treasurer/payment_category/create', [PaymentCategoryController::class, 'create'])->name('payment_category.create');
+    Route::post('/treasurer/payment_category/create', [PaymentCategoryController::class, 'store'])->name('payment_category.store');
+    Route::get('/treasurer/payment_category/{id}/edit',[PaymentCategoryController::class, 'edit'])->name('payment_category.edit');
+    Route::post('/treasurer/payment_category/{id}/edit',[PaymentCategoryController::class, 'update'])->name('payment_category.update');
+    Route::delete('/treasurer/payment_category/{id}/destroy',[PaymentCategoryController::class, 'destroy'])->name('payment_category.destroy');
+    
+});
 
 require __DIR__.'/auth.php';

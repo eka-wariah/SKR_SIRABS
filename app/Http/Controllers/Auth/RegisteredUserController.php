@@ -35,6 +35,10 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'usr_scope_id' => ['required', 'exists:area_scopes,asc_id']
+        ], [
+                'usr_scope_id.required' => 'RT wajib diisi.',
+                'usr_scope_id.exists' => 'RT tidak valid.',
         ]);
 
         $user = User::create([
@@ -50,6 +54,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('citizen.dashboard', absolute: false));
     }
 }

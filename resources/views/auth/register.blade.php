@@ -166,6 +166,9 @@
                       </option>
                   @endforeach
                     </select>
+                    @error('usr_scope_id')
+    <div class="text-danger mt-1">{{ $message }}</div>
+@enderror
                   </div>
                 <div class="my-8 form-control-validation">
                   <div class="form-check mb-0 ms-2">

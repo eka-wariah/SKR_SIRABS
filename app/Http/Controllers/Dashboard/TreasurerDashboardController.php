@@ -12,7 +12,7 @@ class TreasurerDashboardController extends Controller
      */
     public function index()
     {
-        //
+        return view('treasurer.dashboard');
     }
 
     /**
