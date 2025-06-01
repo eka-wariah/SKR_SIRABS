@@ -61,14 +61,14 @@
         </a>
         <ul class="menu-sub">
           <li class="menu-item">
-            <a href="/rw_leader/treasurer" class="menu-link">
+            <a href="/citizen/payment" class="menu-link">
               <div data-i18n="Pembayaran">Pembayaran</div>
             </a>
           </li>
         </ul>
         <ul class="menu-sub">
           <li class="menu-item">
-            <a href="/rw_leader/treasurer" class="menu-link">
+            <a href="/citizen/payment/history" class="menu-link">
               <div data-i18n="History Pembayaran">History Pembayaran</div>
             </a>
           </li>

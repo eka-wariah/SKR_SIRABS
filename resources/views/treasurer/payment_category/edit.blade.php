@@ -1,15 +1,16 @@
-@extends('wastebank_officer.master_officer')
-
+@extends('treasurer.master_treasurer')
 @push('link')
-    
+<link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css')}}" />
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css')}}">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 @endpush
 
 @section('title')
-    SiTAW | Tambah Kategori
+    SiTAW | Edit Kategori
 @endsection
 
 @section('content')
-   <div class="row"style="padding: 20px">
+   <div class="row" style="padding: 25px">
     <div class="col-lg-12">
         <div class="card">
           <div class="px-4 py-3 border-bottom">
@@ -19,22 +20,24 @@
             @csrf
             <div class="card-body">
                 <div class="mb-4 row align-items-center">
-                  <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">Nama Kategori Pembayaran</label>
+                  <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">Nama Kategori</label>
                   <div class="col-sm-9">
-                    <input type="text" name="pym_name" class="form-control" id="exampleInputText1" placeholder="" required oninvalid="this.setCustomValidity('Nama Jurusan Wajib Diisi')" onchange="this.setCustomValidity('')">
+                    <input type="text" name="pym_name" value="{{$EditPaymentCategory->pym_name}}" class="form-control" id="exampleInputText1"  required oninvalid="this.setCustomValidity('Nama Jurusan Wajib Diisi')" 
+                    onchange="this.setCustomValidity('')">
                   </div>
                   @error('pym_name')
-                  <div class="text-danger">{{ $message }}</div>
+                    <div>error</div>
                   @enderror
                 </div>
+
                 <div class="mb-4 row align-items-center">
-                    <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">Harga /bln</label>
+                    <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">Nama Kategori</label>
                     <div class="col-sm-9">
-                      <input type="text" name="pym_total" class="form-control format-rupiah" value="{{ old('pym_total', 'Rp ' . number_format($CreatePaymentCategory->pym_total ?? 0, 0, '', '.')) }}"placeholder="" required oninvalid="this.setCustomValidity('Nama Jurusan Wajib Diisi')" onchange="this.setCustomValidity('')">
-                      onchange="this.setCustomValidity('')">
+                        <input type="text" name="pym_total" class="form-control format-rupiah" value="{{ old('pym_total', 'Rp ' . number_format($EditPaymentCategory->pym_total ?? 0, 0, '', '.')) }}"
+                        required oninvalid="this.setCustomValidity('Harga wajib diisi')" onchange="this.setCustomValidity('')">
                     </div>
                     @error('pym_total')
-                    <div class="text-danger">{{ $message }}</div>
+                      <div>error</div>
                     @enderror
                   </div>
                 
@@ -55,7 +58,6 @@
 
 
 
-@push('script')
 @push('script')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -81,7 +83,4 @@
         });
     });
 </script>
-@endpush
-
-    
 @endpush

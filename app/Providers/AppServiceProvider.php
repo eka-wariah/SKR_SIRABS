@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +24,10 @@ class AppServiceProvider extends ServiceProvider
         DB::listen(function ($query) {
             logger($query->sql);
         });
+
+        if (config('app.env')==='local') {
+            URL::forceScheme('http');
+        }
+
     }
 }

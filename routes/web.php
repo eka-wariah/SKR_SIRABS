@@ -11,6 +11,7 @@ use App\Http\Controllers\TrashCategoryController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\WasteBankCitizenController;
 use App\Http\Controllers\WasteBankController;
+use App\Http\Controllers\WasteBankTreasurerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,6 +45,8 @@ Route::middleware(['auth', 'role:rw_leader'])->group(function () {
     Route::get('/get-citizens/{area_scope_id}', [TreasurerController::class, 'getCitizens']);
     Route::delete('/rw_leader/treasurer/{id}/destroy', [TreasurerController::class, 'destroy'])->name('treasurer.destroy');
     Route::resource('rw_leader/treasurer', TreasurerController::class);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
 
     // Route::delete('/rw_leader/treasurer/{user}/{id}', [TreasurerController::class, 'destroy'])->name('treasurer.destroy');
@@ -72,15 +75,27 @@ Route::middleware(['auth', 'role:wastebank_officer'])->group(function () {
     Route::post('/wastebank_officer/waste_bank/{id}/edit',[WasteBankController::class, 'update'])->name('waste_bank.update');
     Route::delete('/wastebank_officer/waste_bank/{id}/destroy',[WasteBankController::class, 'destroy'])->name('waste_bank.destroy');   
     Route::get('/wastebank_officer/waste_bank/{id}', [WasteBankController::class, 'show'])->name('waste_bank.show');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
     
 Route::middleware(['auth', 'role:citizen'])->group(function () {
     Route::get('/citizen', [CitizenDashboardController::class, 'index'])->name('citizen.dashboard');
-    Route::get('/citizen/waste_bank', [WasteBankCitizenController::class, 'index'])->name('waste_bank.index');   
-    Route::get('/citizen/waste_bank/{id}', [WasteBankCitizenController::class, 'show'])->name('waste_bank.show');
+    Route::get('/citizen/waste_bank', [WasteBankCitizenController::class, 'index'])->name('waste_bank_citizen.index');   
+    Route::get('/citizen/waste_bank/{id}', [WasteBankCitizenController::class, 'show'])->name('waste_bank_citizen.show');
 
     Route::get('/citizen/payment', [PaymentsController::class, 'index'])->name('payment.index');
-    Route::get('/citizen/payment/create', [PaymentsController::class, 'create'])->name('payment.create');
+    Route::get('/citizen/payment/create_via_Waste_Bank', [PaymentsController::class, 'createWasteBank'])->name('payment.createWasteBank');
+    Route::post('/citizen/payment/create_via_Waste_Bank', [PaymentsController::class, 'store'])->name('payment.store');
+    Route::get('/citizen/payment/create_via_Bank', [PaymentsController::class, 'createPaymentGateway'])->name('payment.createPaymentGateway');
+    Route::post('/citizen/payment/create_via_Bank', [PaymentsController::class, 'checkout'])->name('payment.checkout');
+    Route::get('/citizen/payment/invoice/{id}', [PaymentsController::class, 'invoice'])->name('payment.invoice');
+    Route::get('/citizen/payment/history', [PaymentsController::class, 'history'])->name('payment.history');
+    Route::get('/citizen/profile', [ProfileController::class, 'edit_photo'])->name('profile.edit_photo');
+    Route::patch('/citizen/profile', [ProfileController::class, 'update_photo'])->name('profile.update_photo');
+
+    Route::get('/alamat/edit', [ProfileController::class, 'editAlamat'])->name('profile.editAlamat');
+    Route::put('/alamat/update', [ProfileController::class, 'updateAlamat'])->name('profile.updateAlamat');
 });
 
 Route::middleware(['auth', 'role:treasurer'])->group(function () {
@@ -91,6 +106,11 @@ Route::middleware(['auth', 'role:treasurer'])->group(function () {
     Route::get('/treasurer/payment_category/{id}/edit',[PaymentCategoryController::class, 'edit'])->name('payment_category.edit');
     Route::post('/treasurer/payment_category/{id}/edit',[PaymentCategoryController::class, 'update'])->name('payment_category.update');
     Route::delete('/treasurer/payment_category/{id}/destroy',[PaymentCategoryController::class, 'destroy'])->name('payment_category.destroy');
+
+    Route::get('/treasurer/waste_bank', [WasteBankTreasurerController::class, 'index'])->name('waste_bank_treasurer.index');   
+    Route::get('/treasurer/waste_bank/{id}', [WasteBankTreasurerController::class, 'show'])->name('waste_bank_treasurer.show');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     
 });
 

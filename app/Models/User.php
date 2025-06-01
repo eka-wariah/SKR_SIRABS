@@ -16,6 +16,7 @@ class User extends Authenticatable
     protected $primaryKey = 'usr_id';
     protected $guarded = [];
 
+
     public function treasurer()
     {
         return $this->hasOne(treasurer::class, 'trs_name_id');
@@ -40,6 +41,14 @@ class User extends Authenticatable
         'email',
         'usr_scope_id',
         'password',
+        'gender',
+        'phone',
+        'address',
+        'profile_photo',
+        'usr_scope_id',
+        'village',
+        'subdistrict',
+        'regency',
     ];
 
     /**

@@ -15,8 +15,18 @@ return new class extends Migration
             $table->bigIncrements('usr_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
+            $table->string('profile_photo')->nullable();
+            $table->string('phone')->nullable();
             $table->unsignedBigInteger('usr_scope_id')->nullable(); 
             $table->foreign('usr_scope_id')->references('asc_id')->on('area_scopes')->onDelete('cascade');
+            $table->string('address')->nullable();
+            $table->string('village')->nullable();
+            $table->string('subdistrict')->nullable();
+            $table->string('regency')->nullable();
+            $table->date('birth_date')->nullable();
+         
+            $table->text('bio')->nullable();
             //$table->foreign('area_scope_id')->references('asc_id')->on('area_scopes');
             $table->unsignedBigInteger('total_money')->default(0); 
             $table->timestamp('email_verified_at')->nullable();

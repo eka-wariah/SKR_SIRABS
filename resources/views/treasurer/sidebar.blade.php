@@ -51,13 +51,13 @@
   
       <!-- Apps & Pages -->
       <li class="menu-header small">
-        <span class="menu-header-text" data-i18n="Kelola Data Pembayaran<">Kelola Data Pembayaran</span>
+        <span class="menu-header-text" data-i18n="Kelola Data Pembayaran">Kelola Data Pembayaran</span>
       </li>
       <!-- e-commerce-app menu start -->
       <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon icon-base ti tabler-brand-cashapp"></i>
-          <div data-i18n="Pembayaran Retribusi">Data Pembayaran Retribusi</div>
+          <div data-i18n="Pembayaran Retribusi">Pembayaran Retribusi</div>
         </a>
         <ul class="menu-sub">
           <li class="menu-item">
@@ -68,7 +68,7 @@
         </ul>
         <ul class="menu-sub">
           <li class="menu-item">
-            <a href="/rw_leader/treasurer" class="menu-link">
+            <a href="/treasurer/payment_category" class="menu-link">
               <div data-i18n="Kategori Pembayaran">Kategori Pembayaran</div>
             </a>
           </li>
@@ -79,7 +79,7 @@
         <span class="menu-header-text" data-i18n="Kegiatan Bank Sampah">Kegiatan Bank Sampah</span>
       </li>
       <li class="menu-item">
-        <a href="/citizen/waste_bank/" class="menu-link">
+        <a href="/treasurer/waste_bank" class="menu-link">
           <i class="menu-icon icon-base ti tabler-database-dollar"></i>
           <div data-i18n="Penghasilan Bank Sampah">Penghasilan Bank Sampah</div>
         </a>

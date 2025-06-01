@@ -48,7 +48,7 @@
           
             <div class="col-sm-9">
                 <button type="button" class="btn btn-secondary mt-3" id="tambah-kategori">+ Tambah Kategori</button>
-                <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+                <button input type="submit" class="btn btn-primary" value="Kirim" id="">Kirim</button>
             </div>
           </div>
 

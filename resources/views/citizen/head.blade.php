@@ -8,6 +8,8 @@
 
     <meta name="description" content="" />
 
+    <script type="text/javascript" src="https://app.stg.midtrans.com/snap/snap.js" data-client-key="{{config('midtrans.client_key')}}"></script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('vuexy/assets/img/favicon/favicon.ico')}}" />
 

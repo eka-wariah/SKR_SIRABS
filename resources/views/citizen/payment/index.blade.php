@@ -14,43 +14,36 @@
 
 <div class="row">
 
+  <div class="row justify-content-center">
 <div class="col-xl-4 d-flex align-items-stretch" style="padding: 35px">
     <div class="card w-100">
       <div class="card-body p-4">
         <h4 class="card-title fw-semibold">Pembayaran Digital</h4>
         <p class="card-subtitle">Pembayaran Digital Melalui Bank</p>
         <div class="card overflow-hidden mt-9">
-          <img src="{{ asset('modernize/assets/images/backgrounds/my-card.jpg')}}" alt="bg-card" height="220">
+          <img src="{{ asset('modernize/assets/images/backgrounds/payment.svg')}}" alt="bg-card" height="220">
           <div class="card-img-overlay text-white">
             <div class="d-flex align-items-start flex-column h-100">
               <div>
-                <img src="{{ asset('modernize/assets/images/nft/mastercard.png')}}" width="40" alt="mastercard" />
+                {{-- <img src="{{ asset('modernize/assets/images/nft/mastercard.png')}}" width="40" alt="mastercard" />
                 <span class="opacity-75 fs-2 d-block mt-3">CARD NUMBER</span>
-                <h4 class="text-white fw-normal">2500 1520 2315 4500</h4>
+                <h4 class="text-white fw-normal">2500 1520 2315 4500</h4> --}}
               </div>
               <div class="d-flex align-items-center justify-content-between mt-auto w-100">
-                <div>
+                {{-- <div>
                   <span class="opacity-75 fs-2 text-uppercase">Card Holder Name</span>
-                  <h6 class="text-white mb-0">HR John</h6>
+                  <h6 class="text-white mb-0">{{ auth()->user()->name }}</h6>
                 </div>
                 <div>
                   <span class="opacity-75 fs-2 text-uppercase">Expires On</span>
                   <h6 class="text-white mb-0">09/25</h6>
-                </div>
+                </div> --}}
               </div>
             </div>
           </div>
         </div>
-        <h4 class="card-title fw-semibold">Saldo Bank Sampah</h4>
-        <p class="card-subtitle">Total Saldo Anda : </p>
         <div class="card shadow-none mb-0">
           <div class="card-body p-0">
-            <br>
-            <div class="d-flex align-items-center mb-3">
-              <h2 class="fw-semibold mb-0">Rp{{ number_format($saldoBankSampah, 0, ',', '.') }}</h2>
-              <div class="ms-auto">
-              </div>
-            </div>
             <button class="btn bg-primary-subtle text-primary w-100 mt-3"> View Balance </button>
           </div>
         </div>
@@ -58,36 +51,89 @@
     </div>
   </div>
 
-<div class="col-xl-8 d-flex align-items-stretch"style="padding: 25px">
+  <div class="col-xl-4 d-flex align-items-stretch" style="padding: 35px">
     <div class="card w-100">
       <div class="card-body p-4">
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <h4 class="card-title fw-semibold">Status Pembayaran</h4>
-            <p class="card-subtitle">Status Pembayaran men </p>
+        <h4 class="card-title fw-semibold">Saldo Bank Sampah</h4>
+        <p class="card-subtitle">Pembayaran Melalui Saldo Bank Sampah</p>
+        <div class="card overflow-hidden mt-3">
+          <img src="{{ asset('modernize/assets/images/backgrounds/my-card1.png')}}" alt="bg-card" height="220">
+          <div class="card-img-overlay text-white">
+            <div class="d-flex align-items-start flex-column h-100">
+              <div>
+                {{-- <img src="{{ asset('modernize/assets/images/nft/mastercard.png')}}" width="40" alt="mastercard" /> --}}
+                {{-- <span class="opacity-75 fs-2 d-block mt-3">CARD NUMBER</span>
+                <h4 class="text-white fw-normal">2500 1520 2315 4500</h4> --}}
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-auto w-100">
+                 <div>
+                  <span class="opacity-75 fs-2 text-uppercase">Saldo Anda :</span>
+                  <h6 class="text-black mb-0">Rp{{ number_format($saldoBankSampah, 0, ',', '.') }}</h6>
+                </div>
+                {{--<div>
+                  <span class="opacity-75 fs-2 text-uppercase">Expires On</span>
+                  <h6 class="text-white mb-0">09/25</h6>
+                </div> --}}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card mt-4 mb-0 shadow-none">
-          <div class="table-responsive">
-            <table class="table align-middle text-nowrap mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Nama</th>
-                  <th scope="col">Kategori Pembayaran</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody class="text-dark ">
-              
-              </tbody>
-            </table>
+
+        <div class="card shadow-none mb-0">
+          <div class="card-body p-6">
+            @if($saldoBankSampah >= $biayaYangDibutuhkan)
+              <a href="/citizen/payment/create_via_Waste_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1"> View Balance</a>
+            @else
+              <button class="btn bg-primary-subtle text-primary w-100 mt-1" disabled>Saldo Tidak Cukup</button>
+            @endif
           </div>
         </div>
       </div>
     </div>
   </div>
+  </div>
+  <div class="col-xl-20 d-flex align-items-stretch" style="padding: 35px;">
+    <div class="card w-100 shadow-sm rounded-4">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="card-title fw-semibold mb-1">Menunggu Pembayaran</h4>
+            <p class="card-subtitle text-muted small">Pembayaran yang prosesnya belum selesai</p>
+          </div>
+        </div>
+  
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kategori Pembayaran</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($pendingPayments as $no=> $payment)
+              <tr>
+                <td>{{$no+1}}</td>
+                <td>{{$payment->user->name}}</td>
+                <td>{{$payment->paymentCategory->pym_name }}</td>
+                <td>{{$payment->status }}</td>
+                <td>Rp {{ number_format($payment->jumlah_bayar, 0, ',', '.') }}</td>
+                  <td>
+                       <a href="/citizen/payment/create_via_Bank/{{ $payment->pyn_id}}" class="btn btn-danger">lanjut pembayaran</a> 
+                  </td>                 
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 </div>
 
