@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('jumlah_bayar', 15, 2); 
             $table->enum('metode_bayar', ['bank_sampah', 'digital']);
             $table->enum('status', ['lunas', 'pending', 'gagal'])->default('lunas');
+            $table->enum('pyn_status_submission', ['Belum Diserahkan', 'Menunggu Konfirmasi', 'Sudah Dikonfirmasi'])->default('Belum Diserahkan');
         
             $table->timestamps();
             $table->renameColumn('updated_at', 'pyn_updated_at');

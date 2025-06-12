@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AreaScopeSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
+            TreasurerSeeder::class,
         ]);
     
     }

@@ -271,6 +271,31 @@ class PaymentsController extends Controller
     return view('citizen.payment.options', compact('saldo', 'biayaYangDibutuhkan'));
     }
 
+    public function mark_submitted($id)
+    {
+        $payment = payments::findOrFail($id);
+        $payment->pyn_status_submission = 'Menunggu Konfirmasi';
+        $payment->save();
+
+    return back()->with('success', 'Pembayaran ditandai sebagai sudah diserahkan.');
+    }
+
+    public function konfirmasiDiterima($id)
+    {
+    $payment = payments::findOrFail($id);
+
+    if ($payment->pyn_status_submission === 'Menunggu Konfirmasi') {
+        $payment->pyn_status_submission = 'Sudah Dikonfirmasi';
+        $payment->save();
+
+        return back()->with('success', 'Dana berhasil dikonfirmasi diterima.');
+    }
+
+    return back()->with('error', 'Status tidak valid untuk dikonfirmasi.');
+    }
+
+    
+
     /**
      * Show the form for editing the specified resource.
      */

@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\WasteBankDashboardController;
 use App\Http\Controllers\PaymentCategoryController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubmissionFundController;
 use App\Http\Controllers\TrashCategoryController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\WasteBankCitizenController;
@@ -77,6 +78,10 @@ Route::middleware(['auth', 'role:wastebank_officer'])->group(function () {
     Route::get('/wastebank_officer/waste_bank/{id}', [WasteBankController::class, 'show'])->name('waste_bank.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/wastebank_officer/submission', [SubmissionFundController::class, 'index_officer'])->name('submission.index_officer');
+    Route::post('/wastebank_officer/submission/{id}', [SubmissionFundController::class, 'mark_submitted'])->name('submission.mark_submitted');
+    Route::get('/submission/data', [SubmissionFundController::class, 'getData'])->name('submission.data');
+
 });
     
 Route::middleware(['auth', 'role:citizen'])->group(function () {
@@ -111,6 +116,8 @@ Route::middleware(['auth', 'role:treasurer'])->group(function () {
     Route::get('/treasurer/waste_bank/{id}', [WasteBankTreasurerController::class, 'show'])->name('waste_bank_treasurer.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/treasurer/confirm_submission', [SubmissionFundController::class, 'index_treasurer'])->name('submission.index_treasurer');
+    Route::post('/treasurer/confirm/{id}', [SubmissionFundController::class, 'confirm_submission'])->name('submission.confirm');
     
 });
 
