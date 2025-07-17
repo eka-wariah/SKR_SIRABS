@@ -1,4 +1,4 @@
-@extends('citizen.master_citizen')
+@extends('wastebank_officer.master_officer')
 
 @push('link')
 <link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css')}}" />
@@ -105,7 +105,21 @@
                         </tr>
                     </thead>
                     <tbody></tbody>
+                    <tfoot>
+                        <!-- start row -->
+                        
+
+                        <tr>
+                            <th></th>
+                            <th>Total Keseluruhan</th>
+                            <th id="totalDiserahkan">Rp 0</th> <!-- ini yang nanti diganti dari JS -->
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <!-- end row -->
+                    </tfoot>
                 </table>
+            
             </div>
         </div>
     </div>
@@ -123,8 +137,9 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 
-    <script>
+    {{-- <script>
         let table;
+        
 
         $(document).ready(function () {
             table = $("#file_export").DataTable({
@@ -155,6 +170,7 @@
       text: 'Print',
       className: 'btn btn-primary',
       title: 'Laporan Penyerahan Dana',
+      footer: true
     },
   ],
                 ajax: {
@@ -188,5 +204,97 @@
                 table.ajax.reload();
             });
         });
+    </script> --}}
+    <script>
+        let table;
+        $(document).ready(function () {
+            table = $("#file_export").DataTable({
+                dom: '<"d-flex justify-content-start gap-2 mb-3"B>frtip',
+                buttons: [
+                    { extend: 'copy', text: 'Copy', className: 'btn btn-primary' },
+                    { extend: 'csv', text: 'CSV', className: 'btn btn-primary' },
+                    { extend: 'excel', text: 'Excel', className: 'btn btn-primary' },
+                    { extend: 'pdf', text: 'PDF', className: 'btn btn-primary' },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'btn btn-primary',
+                        title: 'Laporan Penyerahan Dana',
+                        customize: function (win) {
+                            const footer = $('#file_export tfoot').html();
+                            $(win.document.body).find('table').append(`<tfoot>${footer}</tfoot>`);
+                        }
+                    }
+                ],
+                ajax: {
+                    url: "{{ route('submission.data') }}",
+                    data: function (d) {
+                        d.year = $('#filterYear').val();
+                        d.month = $('#filterMonth').val();
+                        d.usr_scope_id = $('#filterScope').val();
+                        d.pyn_status_submission = $('#filterStatus').val();
+                    },
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'index' },
+                    { data: 'nama' },
+                    { data: 'jumlah' },
+                    { data: 'status' },
+                    { data: 'aksi' }
+                ],
+                columnDefs: [
+                    { targets: [3, 4], orderable: false, searchable: false }
+                ]
+            });
+    
+            table.buttons().container().appendTo('#customButtonWrapper');
+    
+            $('#filterYear, #filterMonth, #filterScope, #filterStatus').on('change', function () {
+                table.ajax.reload();
+                updateTotalDiserahkan();
+            });
+    
+            // Load total pertama kali
+            updateTotalDiserahkan();
+    
+            // Handler tombol "Tandai Diserahkan"
+            $(document).on('click', '.btn-tandai-disahkan', function (e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+    
+                $.ajax({
+                    url: '/submission/tandai/' + id,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (res) {
+                        table.ajax.reload();
+                        updateTotalDiserahkan();
+                        // Bisa ditambah notifikasi sukses di sini
+                    }
+                });
+            });
+        });
+        function updateTotalDiserahkan() {
+    $.ajax({
+        url: '/submission/total',
+        method: 'GET',
+        data: {
+            year: $('#filterYear').val(),
+            month: $('#filterMonth').val(),
+            usr_scope_id: $('#filterScope').val() || null,
+            pyn_status_submission: $('#filterStatus').val() || null
+        },
+        success: function (res) {
+            $('#totalDiserahkan').text(res.total_format);
+        },
+        error: function () {
+            $('#totalDiserahkan').text('gagal awokwowowk');
+        }
+    });
+}
     </script>
+    
 @endpush

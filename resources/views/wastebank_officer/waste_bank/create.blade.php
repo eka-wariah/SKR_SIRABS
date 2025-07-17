@@ -1,87 +1,4 @@
 @extends('wastebank_officer.master_officer')
-@push('link')
-    
-@endpush
-@section('content')
-<div class="container">
-    <h3>Setor Sampah</h3>
-
-    <form method="POST" action="{{ route('waste_bank.store') }}">
-        @csrf
-
-        <div class="mb-3">
-            <label class="form-label col-sm-3 col-form-label" for="usr_id">Pilih Warga</label>
-            <select name="usr_id" class="form-control">
-                @foreach ($users as $user)
-                    <option value="{{ $user->usr_id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label col-sm-3 col-form-label" for="usr_id">Hasil Timbangan</label>
-        <div id="kategori-container">
-            <div class="kategori-item row mb-2">
-                <div class="col-md-5">
-                    <select name="categories[0][trc_id]" class="form-control">
-                        @foreach ($trash_category as $trash_category)
-                            <option value="{{ $trash_category->trc_id }}">{{ $trash_category->trc_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <input type="number" step="0.1" name="categories[0][berat]" class="form-control" placeholder="Berat (kg)">
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-kategori">-</button>
-                </div>
-                
-            </div>
-           
-        </div>
-        </div>
-        <div class="row">
-          
-            <div class="col-sm-9">
-                <button type="button" class="btn btn-secondary mt-3" id="tambah-kategori">+ Tambah Kategori</button>
-                <button type="submit" class="btn btn-primary mt-3">Simpan</button>
-            </div>
-          </div>
-
-      
-    </form>
-</div>
-
-{{-- <script>
-    let i = 1;
-    document.getElementById('tambah-kategori').addEventListener('click', function () {
-        const container = document.getElementById('kategori-container');
-        const clone = container.firstElementChild.cloneNode(true);
-        clone.querySelectorAll('select, input').forEach(el => {
-            const name = el.getAttribute('name');
-            el.setAttribute('name', name.replace(/\[\d+\]/, `[${i}]`));
-            el.value = '';
-        });
-        container.appendChild(clone);
-        i++;
-    });
-
-    document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-kategori')) {
-            const item = e.target.closest('.kategori-item');
-            if (document.querySelectorAll('.kategori-item').length > 1) {
-                item.remove();
-            }
-        }
-    });
-</script> --}}
-@push('script')
-    
-@endpush
-@endsection
-
-
-{{-- @extends('wastebank_officer.master_petugas')
 
 @push('link')
     
@@ -92,72 +9,148 @@
 @endsection
 
 @section('content')
-   <div class="row">
+   <div class="row" style="padding: 25px">
     <div class="col-lg-12">
         <div class="card">
           <div class="px-4 py-3 border-bottom">
             <h4 class="card-title mb-0">Tambah Kategori</h4>
           </div>
+
           <form action="" method="post">
-            @csrf
-            <div class="card-body">
-                <div class="mb-4 row align-items-center">
-                  <label for="Select" class="form-label col-sm-3 col-form-label">Nama Warga</label>
-                  <div class="col-sm-9">
-                  <select id="Select" name="usr_id" class="form-control" required>
-                  <option hidden  value="">Pilih Nama Warga</option>
-                  @foreach ($users as  $users)
-                    <option value="{{ $users->usr_id }}">{{ $users->name }}</option>
-                  @endforeach
-                  </select>
-                  @error('bsh_nama_id')
-                      <div id="bsh_id" class="form-text">{{ $message }}</div>
-                  @enderror
-                  </div>
-              </div>
-                <div class="mb-4 row align-items-center">
-                    <label for="Select" class="form-label col-sm-3 col-form-label">Kategori Sampah</label>
-                    <div class="col-sm-9">
-                    <select id="Select" name="trc_id" class="form-control" required>
-                    <option hidden  value="">Pilih Kategori Sampah</option>
-                    @foreach ($trash_category as  $trash_category)
-                      <option value="{{ $trash_category->trc_id }}">{{ $trash_category->trc_name }}</option>
-                    @endforeach
+        @csrf
+        <div class="card-body">
+            <label class="form-label col-sm-3 col-form-label" for="usr_id">Pilih Warga</label>
+            <select name="usr_id" class="form-control">
+                @foreach ($users as $user)
+                    <option value="{{ $user->usr_id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+   
+
+        <div class="mb-3">
+            <label class="form-label col-sm-3 col-form-label">Hasil Timbangan</label>
+        <div id="kategori-container">
+            <div class="kategori-item row mb-2">
+                <div class="col-md-5">
+                    <select name="categories[0][trc_id]" class="form-control">
+                        @foreach ($trash_category as $trash)
+                            <option value="{{ $trash->trc_id }}">{{ $trash->trc_name }}</option>
+                        @endforeach
                     </select>
-                    @error('wtb_category_trash_id')
-                        <div id="wtb_id" class="form-text">{{ $message }}</div>
-                    @enderror
-                    </div>
                 </div>
-                <div class="mb-4 row align-items-center">
-                    <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">total sampah/kg</label>
-                    <div class="col-sm-9">
-                      <input type="number" name="wtb_total_wate" class="form-control" id="exampleInputText1" placeholder="" required oninvalid="this.setCustomValidity('Nama Jurusan Wajib Diisi')" 
-                      onchange="this.setCustomValidity('')">
-                    </div>
-                    @error('wtb_total_wate')
-                      <div>error</div>
-                    @enderror
-                  </div>
-                  
-                
-                <div class="row">
-                  <div class="col-sm-3"></div>
-                  <div class="col-sm-9">
-                    <input type="submit" class="btn btn-primary" value="Kirim" id="">
-                  </div>
+                <div class="col-md-5">
+                    <input type="number" step="0.1" name="categories[0][berat]" class="form-control" placeholder="Berat (kg)">
                 </div>
-              </div>
-          </form>
-          
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-kategori">-</button>
+                </div>
+            </div>
         </div>
-      </div>
-   </div>
-    
-@endsection
+        </div>
 
+        {{-- TOTAL --}}
+        <div class="mb-3">
+            <label class="form-label">Total Uang yang Didapatkan</label>
+            <input type="text" id="total-uang" class="form-control" readonly>
+        </div>
 
+        {{-- METODE SETOR --}}
+        <div class="mb-3">
+            <label class="form-label col-sm-3 col-form-label">Metode Penyetoran</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="deposit_type" value="tabung" checked>
+                <label class="form-check-label">Ditabung ke Saldo</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="deposit_type" value="tunai">
+                <label class="form-check-label">Diambil Tunai (tidak ditabung)</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-9">
+                <button type="button" class="btn btn-secondary mt-3" id="tambah-kategori">+ Tambah Kategori</button>
+                <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</div>
 
 @push('script')
-    
-@endpush --}}
+<script>
+    let i = 1;
+
+    // Data harga per kategori dari server (PHP → JS)
+    const hargaPerKategori = {
+        @foreach ($trash_category as $trash)
+            "{{ $trash->trc_id }}": {{ $trash->trc_price }},
+        @endforeach
+    };
+
+    function hitungTotal() {
+        let total = 0;
+        document.querySelectorAll('.kategori-item').forEach(function (item) {
+            const trcSelect = item.querySelector('select[name*="[trc_id]"]');
+            const beratInput = item.querySelector('input[name*="[berat]"]');
+
+            const trcId = trcSelect.value;
+            const berat = parseFloat(beratInput.value) || 0;
+            const harga = hargaPerKategori[trcId] || 0;
+
+            const subtotal = berat * harga;
+            total += subtotal;
+        });
+
+        document.getElementById('total-uang').value = formatRupiah(total);
+    }
+
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0, // Tidak tampilkan 2 angka nol
+            maximumFractionDigits: 0  // Bahkan jika ada angka .00
+        }).format(angka);
+    }
+
+    document.getElementById('tambah-kategori').addEventListener('click', function () {
+        const container = document.getElementById('kategori-container');
+        const clone = container.firstElementChild.cloneNode(true);
+
+        clone.querySelectorAll('select, input').forEach(el => {
+            const name = el.getAttribute('name');
+            el.setAttribute('name', name.replace(/\[\d+\]/, `[${i}]`));
+            el.value = '';
+        });
+
+        container.appendChild(clone);
+        i++;
+        hitungTotal(); // hitung ulang setelah tambah
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-kategori')) {
+            const item = e.target.closest('.kategori-item');
+            if (document.querySelectorAll('.kategori-item').length > 1) {
+                item.remove();
+                hitungTotal(); // hitung ulang setelah hapus
+            }
+        }
+    });
+
+    document.addEventListener('input', function (e) {
+        if (e.target.matches('select[name*="[trc_id]"], input[name*="[berat]"]')) {
+            hitungTotal();
+        }
+    });
+
+    // Hitung awal saat form dibuka
+    document.addEventListener('DOMContentLoaded', function () {
+        hitungTotal();
+    });
+</script>
+@endpush
+@endsection

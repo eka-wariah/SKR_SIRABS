@@ -17,9 +17,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AreaScopeSeeder::class,
+            HouseholdSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
             TreasurerSeeder::class,
+            PaymentCategorySeeder::class,
+            TrashCategorySeeder::class,
         ]);
     
     }

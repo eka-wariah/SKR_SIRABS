@@ -15,19 +15,40 @@ class TreasurerController extends Controller
      */
     public function index()
     {
-        $treasurers = User::role('treasurer')
-            ->with('treasurer', 'treasurer.areaScope')
-            ->get();
+        $loggedInScopeId = auth()->user()->usr_scope_id;
+
+    // Ambil bendahara hanya dari RT yang sama
+    $treasurer = User::role('treasurer')
+        ->whereHas('treasurer', function ($query) use ($loggedInScopeId) {
+            $query->where('trs_area_id', $loggedInScopeId);
+        })
+        ->with('treasurer.areaScope')
+        ->first();
+    //     $loggedInScopeId = auth()->user()->usr_scope_id;
+
+    // // Ambil hanya satu bendahara di wilayah RT user login
+    // $treasurers = User::role('treasurer')
+    //     ->where('usr_scope_id', $loggedInScopeId)
+    //     ->with('treasurer.areaScope')
+    //     ->first(); // Hanya satu
+
+    // $jumlahWarga = User::where('usr_scope_id', $loggedInScopeId)
+    //     ->role('citizen')
+    //     ->count();
+
+    // $wargaCalonBendahara = User::where('usr_scope_id', $loggedInScopeId)
+    //     ->role('citizen')
+    //     ->get();
         $title = 'Delete User!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
-        return view('rw_leader.treasurer.index', compact('treasurers'));
+        return view('rt_leader.treasurer.index', compact('treasurer'));
     }
 
     public function create()
     {
         $areaScopes = area_scope::all();
-        return view('rw_leader.treasurer.create', compact('areaScopes'));
+        return view('rt_leader.treasurer.create', compact('areaScopes'));
     }
 
     public function store(Request $request)

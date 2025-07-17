@@ -44,7 +44,7 @@
         </div>
         <div class="card shadow-none mb-0">
           <div class="card-body p-0">
-            <button class="btn bg-primary-subtle text-primary w-100 mt-3"> View Balance </button>
+            <a href="/citizen/payment/create_via_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1"> View Balance</a>
           </div>
         </div>
       </div>

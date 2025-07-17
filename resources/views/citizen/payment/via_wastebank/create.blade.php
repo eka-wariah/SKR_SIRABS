@@ -38,6 +38,17 @@
           <div class="mb-4 row align-items-center">
             <label for="kategori" class="form-label col-sm-3 col-form-label">Kategori Pembayaran</label>
             <div class="col-sm-9">
+              @if($PaymentCategory->isEmpty())
+              {{-- Jika semua kategori sudah dibayar --}}
+              <div class="alert alert-success">
+                  Semua kategori pembayaran sudah dibayar untuk bulan ini.
+              </div>
+          @else
+              @if(!$PayWater)
+              <div class="alert alert-info">
+                  Kamu belum terdaftar sebagai pengguna layanan air. Kategori pembayaran air tidak tersedia.
+              </div>
+              @endif
             <select name="payment_category_id" id="kategori" class="form-control" required>
                 <option value="">-- Pilih Kategori --</option>
                 @foreach($PaymentCategory as $kategori)
@@ -46,8 +57,10 @@
                     </option>
                 @endforeach
             </select>
+            @endif
         </div>
           </div>
+         
 
         <div class="mb-4 row align-items-center">
             <label for="exampleInputText1" class="form-label col-sm-3 col-form-label">Jumlah Bayar</label>
@@ -61,8 +74,11 @@
         <div class="row">
             <div class="col-sm-3"></div>
             <div class="col-sm-9">
-              <button input type="submit" class="btn btn-primary" value="Kirim" id="">Kirim</button>
-              
+              @if(!$PaymentCategory->isEmpty())
+              <button type="submit" class="btn btn-primary" id="submit-btn">Kirim</button>
+          @endif
+              <a href="/citizen/payment" class="btn btn-primary">Kembali ke Beranda
+              </a>
             </div>
           </div>
     </form>

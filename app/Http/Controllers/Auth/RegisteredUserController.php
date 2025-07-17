@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\area_scope;
+use App\Models\households;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -35,20 +36,29 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'usr_scope_id' => ['required', 'exists:area_scopes,asc_id']
+            'usr_scope_id' => ['required', 'exists:area_scopes,asc_id'],
+            'nik' => ['required', 'string', 'unique:users'],
+        'no_kk' => ['required', 'string'],
         ], [
                 'usr_scope_id.required' => 'RT wajib diisi.',
                 'usr_scope_id.exists' => 'RT tidak valid.',
         ]);
+        $household = households::firstOrCreate(
+            ['no_kk' => $request->no_kk],
+            ['alamat' => null]
+        );
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'usr_scope_id' => $request->usr_scope_id,
+            'nik' => $request->nik,
+            'household_id' => $household->id,
+            
         ]);
         $user->assignRole('citizen');
-        //dd($request->all());
+        // dd($request->all());
 
         event(new Registered($user));
 

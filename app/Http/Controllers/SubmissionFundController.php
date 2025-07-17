@@ -88,12 +88,20 @@ class SubmissionFundController extends Controller
                 'Sudah Dikonfirmasi' => '<span class="badge bg-success">Sudah Dikonfirmasi</span>',
                 default => '<span class="badge bg-secondary">Belum Diserahkan</span>',
             },
-            'aksi' => $p->pyn_status_submission === 'Belum Diserahkan'
-                ? '<form method="POST" action="' . route('submission.mark_submitted', $p->pyn_id) . '">' .
-                  csrf_field() .
-                  '<button type="submit" class="btn btn-sm btn-primary">Tandai Sudah Diserahkan</button>' .
-                  '</form>'
-                : '<span class="badge bg-success">Sudah Dikonfirmasi</span>'
+            'aksi' => match ($p->pyn_status_submission) {
+                'Belum Diserahkan' => 
+                    '<form method="POST" action="' . route('submission.mark_submitted', $p->pyn_id) . '">' .
+                    csrf_field() .
+                    '<button type="submit" class="btn btn-sm btn-primary">Tandai Sudah Diserahkan</button>' .
+                    '</form>',
+            
+                'Menunggu Konfirmasi' => 
+                    '<span class="badge bg-warning">Menunggu Konfirmasi</span>',
+            
+                'Sudah Dikonfirmasi' => 
+                    '<span class="badge bg-success">Telah Dikonfirmasi</span>',
+            }
+            
         ];
     });
 
@@ -112,6 +120,41 @@ class SubmissionFundController extends Controller
     }
 
     return back()->with('success', 'Penyerahan dana ditandai sebagai Menunggu Konfirmasi.');
+    }
+
+    public function getTotal(Request $request)
+    {
+        \Log::debug('Request Params:', $request->all());
+    
+        $query = payments::query()
+            ->where('metode_bayar', 'bank_sampah');
+    
+        if ($request->filled('pyn_status_submission')) {
+            $query->where('pyn_status_submission', $request->pyn_status_submission);
+        } else {
+            $query->where('pyn_status_submission', 'Sudah Dikonfirmasi');
+        }
+    
+        if ($request->filled('year')) {
+            $query->whereYear('pyn_created_at', $request->year);
+        }
+    
+        if ($request->filled('month')) {
+            $query->whereMonth('pyn_created_at', $request->month);
+        }
+    
+        if (!empty($request->usr_scope_id)) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('usr_scope_id', $request->usr_scope_id);
+            });
+        }
+    
+        $total = $query->sum('jumlah_bayar');
+    
+        return response()->json([
+            'total' => $total,
+            'total_format' => 'Rp' . number_format($total, 0, ',', '.')
+        ]);
     }
 
 

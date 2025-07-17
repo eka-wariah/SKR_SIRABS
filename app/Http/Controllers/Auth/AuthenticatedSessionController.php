@@ -31,6 +31,9 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->hasRole('rw_leader')){
             return redirect()->to('rw_leader');
         }
+        if (Auth::user()->hasRole('rt_leader')){
+            return redirect()->to('rt_leader');
+        }
 
         if (Auth::user()->hasRole('treasurer')){
             return redirect()->to('treasurer');

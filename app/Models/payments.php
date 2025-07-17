@@ -13,9 +13,9 @@ class payments extends Model
     protected $primaryKey = 'pyn_id';
     protected $guarded = [];
 
-    const CREATED_AT = 'pyn_created_at';
-    const UPDATED_AT = 'pyn_updated_at';
-    const DELETED_AT = 'pyn_deleted_at';
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+    const DELETED_AT = 'deleted_at';
 
     public function paymentCategory()
 {
@@ -23,12 +23,21 @@ class payments extends Model
 }
 public function user()
 {
-    return $this->belongsTo(User::class, 'pyn_user_id', 'usr_id');
+    return $this->belongsTo(User::class, 'pyn_paid_by', 'usr_id');
 }
 
 public function treasurer()
 {
     return $this->belongsTo(User::class, 'pyn_treasurer_id', 'usr_id');
 }
+public function household()
+    {
+        return $this->belongsTo(households::class);
+    }
+
+    public function paidBy()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
 }

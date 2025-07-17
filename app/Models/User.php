@@ -25,6 +25,25 @@ class User extends Authenticatable
     {
         return $this->belongsTo(area_scope::class, 'usr_scope_id', 'asc_id');
     }
+    public function household()
+{
+    return $this->belongsTo(households::class);
+}
+
+public function paymentsMade()
+{
+    return $this->hasMany(payments::class, 'user_id');
+}
+
+public function WaterRegistration()
+{
+    return $this->hasOne(registration_water::class, 'rgw_household_id', 'household_id');
+}
+
+public function WasteBank()
+{
+    return $this->hasMany(waste_bank::class, 'user_id', 'usr_id');
+}
 
     // public function treasurer()
     // {
@@ -39,6 +58,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nik',
+    'household_id',
         'usr_scope_id',
         'password',
         'gender',

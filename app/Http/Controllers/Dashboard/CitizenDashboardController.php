@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\registration_water;
+use App\Models\User;
+use App\Models\waste_bank_details;
 use Illuminate\Http\Request;
 
 class CitizenDashboardController extends Controller
@@ -14,8 +17,16 @@ class CitizenDashboardController extends Controller
     {
         $user = auth()->user(); // ambil user yang sedang login
         $saldoBankSampah = $user->total_money; // ambil saldo dari kolom total_money
+        $totalBeratSampah = waste_bank_details::whereHas('wasteBank', function ($query) use ($user) {
+            $query->where('wtb_name_id', $user->usr_id);
+        })->sum('berat');
+        $airRegistration = registration_water::where('rgw_household_id', $user->household_id)->first();
 
-        return view('citizen.dashboard', compact('saldoBankSampah'));
+        $ketuaRT = User::where('usr_scope_id', $user->usr_scope_id)
+        ->whereHas('roles', fn ($q) => $q->where('name', 'rt_leader')) // jika pakai Spatie
+        ->first();
+
+        return view('citizen.dashboard', compact('saldoBankSampah', 'airRegistration', 'ketuaRT', 'totalBeratSampah'));
     }
 
     /**

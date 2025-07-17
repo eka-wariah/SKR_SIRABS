@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\payment_category;
 use App\Models\payments;
+use App\Models\treasurer;
 use App\Models\User;
+use App\Models\UserNotification;
 use App\Models\waste_bank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,7 @@ class PaymentsController extends Controller
         $saldoBankSampah = $user->total_money;
         $biayaYangDibutuhkan = payment_category::min('pym_total');
         $pendingPayments = payments::with(['user', 'paymentCategory']) // pastikan relasi sudah ada
+        ->where('pyn_household_id', $user->household_id)
         ->where('status', 'pending')
         ->get();
         return view('citizen.payment.index', compact('saldoBankSampah','biayaYangDibutuhkan', 'pendingPayments' ));
@@ -34,18 +37,41 @@ class PaymentsController extends Controller
     public function createWasteBank()
     {
         $user = auth()->user();
+        $PayWater = $user->WaterRegistration && $user->WaterRegistration->rgw_status === 'Aktif';
         $WasteBank = waste_bank::where('wtb_name_id', $user->usr_id)->first();
         $saldoBankSampah = $user->total_money;
-        $PaymentCategory = payment_category::all();
-        return view('citizen.payment.via_wastebank.create', compact('saldoBankSampah', 'user', 'PaymentCategory'));
+        $periode = now()->format('Y-m');
+        $kategoriSudahDibayar = payments::where('pyn_household_id', $user->household_id)
+            ->where('pyn_periode', $periode)
+            ->pluck('pyn_payment_category_id');
+            
+        $PaymentCategory = payment_category::query()
+            ->when(!$PayWater, function ($query) {
+                $query->where('pym_name', 'not like', '%air%');
+            })
+            ->whereNotIn('pym_id', $kategoriSudahDibayar)
+            ->get();
+
+        return view('citizen.payment.via_wastebank.create', compact('saldoBankSampah', 'user', 'PaymentCategory', 'PayWater'));
     }
     public function createPaymentGateway()
     {
         $user = auth()->user();
+        $PayWater = $user->WaterRegistration && $user->WaterRegistration->rgw_status === 'Aktif';
         $WasteBank = waste_bank::where('wtb_name_id', $user->usr_id)->first();
         $saldoBankSampah = $user->total_money;
-        $PaymentCategory = payment_category::all();
-        return view('citizen.payment.via_bank.create', compact('saldoBankSampah', 'user', 'PaymentCategory'));
+        $periode = now()->format('Y-m');
+        $kategoriSudahDibayar = payments::where('pyn_household_id', $user->household_id)
+            ->where('pyn_periode', $periode)
+            ->pluck('pyn_payment_category_id');
+
+        $PaymentCategory = payment_category::query()
+            ->when(!$PayWater, function ($query) {
+                $query->where('pym_name', 'not like', '%air%');
+            })
+            ->whereNotIn('pym_id', $kategoriSudahDibayar)
+            ->get();
+        return view('citizen.payment.via_bank.create', compact('saldoBankSampah', 'user', 'PaymentCategory', 'PayWater'));
     }
 
     /**
@@ -62,37 +88,55 @@ class PaymentsController extends Controller
         $category = payment_category::findOrFail($request->payment_category_id);
         $jumlah = $category->pym_total;
     
-        // Dapatkan bendahara berdasarkan wilayah user
-        $treasurer = User::role('treasurer') // pakai helper dari Spatie
-            ->where('usr_scope_id', $user->usr_scope_id)
-            ->first();
+        $periode = now()->format('Y-m');
+        $existing = payments::where('pyn_household_id', $user->household_id)
+            ->where('pyn_payment_category_id', $category->pym_id)
+            ->where('pyn_periode', $periode)
+            ->where('status', '!=', 'gagal')
+            ->exists();
+
+        if ($existing) {
+            return back()->with('error', 'Pembayaran kategori ini untuk bulan ini sudah dilakukan.');
+        }
+
+        // Ambil bendahara dari tabel treasurers berdasarkan wilayah user
+        $treasurer = treasurer::where('trs_area_id', $user->usr_scope_id)->first();
     
-            if ($request->metode_bayar === 'bank_sampah') {
-                if ($user->total_money < $jumlah) {
-                    return back()->with('error', 'Saldo tidak cukup untuk membayar.');
-                }
-            
-                $user->total_money -= $jumlah;
-                $user->save();
+        if ($request->metode_bayar === 'bank_sampah') {
+            if ($user->total_money < $jumlah) {
+                return back()->with('error', 'Saldo tidak cukup untuk membayar.');
             }
-    // } else {
-            // Proses ke payment gateway di sini...
-            // Simulasikan sebagai "pending" untuk sekarang
-        // }
     
-        payments::create([
-            'pyn_user_id' => $user->usr_id,
-            'pyn_treasurer_id' => $treasurer ? $treasurer->usr_id : null,
+            $user->total_money -= $jumlah;
+            $user->save();
+        }
+    
+        $payment=payments::create([
+            'pyn_household_id' => $user->household_id,
+            'pyn_paid_by' => $user->usr_id,
+            'pyn_treasurer_id' => $treasurer ? $treasurer->trs_name_id : null,
             'pyn_payment_category_id' => $category->pym_id,
             'jumlah_bayar' => $jumlah,
             'metode_bayar' => $request->metode_bayar,
             'status' => $request->metode_bayar === 'bank_sampah' ? 'lunas' : 'pending',
+            'pyn_periode' => now()->format('Y-m')
         ]);
-    
-        return redirect('/citizen/payment');
-        
-    }
 
+        if ($request->metode_bayar === 'bank_sampah') {
+            UserNotification::create([
+                'user_id' => $user->usr_id,
+                'title' => 'Pembayaran Berhasil ✅',
+                'message' => 'Pembayaran retribusi bulan ' . now()->translatedFormat('F') . ' berhasil dilakukan.',
+                'type' => 'success'
+            ]);
+        }
+
+        \Mail::to($user->email)->send(new \App\Mail\PaymentReceiptMail($payment));
+
+    
+        return redirect('/citizen/payment')->with('success', 'Pembayaran berhasil disimpan');
+    }
+    
     public function checkout(Request $request)
     {
         $user = Auth::user();
@@ -104,14 +148,28 @@ class PaymentsController extends Controller
         ->where('usr_scope_id', $user->usr_scope_id)
         ->first();
 
+        $periode = now()->format('Y-m');
+        $existing = payments::where('pyn_household_id', $user->household_id)
+            ->where('pyn_payment_category_id', $category->pym_id)
+            ->where('pyn_periode', $periode)
+            ->where('status', '!=', 'gagal')
+            ->exists();
+
+        if ($existing) {
+            return back()->with('error', 'Pembayaran kategori ini untuk bulan ini sudah dilakukan.');
+        }
+
+
     // Buat pembayaran sementara
     $payment = payments::create([
-        'pyn_user_id' => $user->usr_id,
+        'pyn_household_id' => $user->household_id,
+        'pyn_paid_by' => $user->usr_id,
         'pyn_treasurer_id' => $treasurer?->usr_id,
         'pyn_payment_category_id' => $category->pym_id,
         'jumlah_bayar' => $jumlah,
         'metode_bayar' => $request->metode_bayar,
         'status' => 'pending',
+        'pyn_periode' => now()->format('Y-m')
     ]);
 
     // Konfigurasi Midtrans
@@ -226,6 +284,16 @@ class PaymentsController extends Controller
     
                 if ($order && $order->status !== 'lunas') {
                     $order->update(['status' => 'lunas']);
+
+                    \Mail::to($order->user->email)->send(new \App\Mail\PaymentReceiptMail($order));
+
+
+                    UserNotification::create([
+                        'user_id' => $order->user->usr_id,
+                        'title' => 'Pembayaran Berhasil ✅',
+                        'message' => 'Pembayaran retribusi bulan ' . now()->translatedFormat('F') . ' melalui Midtrans berhasil.',
+                        'type' => 'success'
+                    ]);
                 }
             }
        
@@ -236,7 +304,7 @@ class PaymentsController extends Controller
     {
         $user = auth()->user();
         $payment = payments::with('paymentCategory', 'treasurer')
-        ->where('pyn_user_id', $user->usr_id)
+        ->where('pyn_paid_by', $user->usr_id)
         ->where('pyn_id', $id) // cari berdasarkan ID invoice
         ->firstOrFail();
         return view('citizen.payment.invoice', compact('user', 'payment'));
@@ -247,9 +315,9 @@ class PaymentsController extends Controller
         $user = auth()->user();
 
     // Ambil semua pembayaran user ini, urut terbaru
-        $History = payments::where('pyn_user_id', $user->usr_id)
+        $History = payments::where('pyn_paid_by', $user->usr_id)
             ->with('paymentCategory','treasurer') // jika ingin tampilkan nama kategori
-            ->orderBy('pyn_created_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
    
         return view('citizen.payment.history', compact('History'));

@@ -17,4 +17,8 @@ class waste_bank_details extends Model
     {
         return $this->belongsTo(waste_bank::class);
     }
+    public function category()
+    {
+        return $this->belongsTo(trash_category::class, 'trash_category_id');
+    }
 }

@@ -8,12 +8,28 @@
 @section('content')
 <div class="body-wrapper mt-4">
     <div class="container-fluid">
+      <div class="d-flex align-items-center gap-4 mb-4">
+        <div class="position-relative">
+          <div class="border border-2 border-primary rounded-circle">
+            <img src="{{ asset('modernize/assets/images/profile/user-1.jpg') }}" class="rounded-circle m-1" alt="user1" width="60" />
+          </div>
+        </div>
+        <div>
+          <h3 class="fw-semibold">Selamat Datang {{ auth()->user()->name }}!</h3>
+          @php
+          \Carbon\Carbon::setLocale('id');
+          $tanggal = \Carbon\Carbon::now();
+          @endphp
+          <span>Semangat beraktivitas - {{ $tanggal->translatedFormat('d F Y') }}</span>
+        </div>
+      </div>
       <div class="row">
         <div class="col-lg-8 d-flex align-items-stretch">
           <div class="card w-100 bg-primary-subtle overflow-hidden shadow-none">
             <div class="card-body position-relative">
               <div class="row">
                 <div class="col-sm-7">
+                  
                   <div class="d-flex align-items-center mb-7">
                     <div class="rounded-circle overflow-hidden me-6">
                       <img src="{{ asset('modernize\assets\images\profile\user-1.jpg')}}" alt="modernize-img" width="40" height="40')}}">
@@ -45,6 +61,7 @@
               </div>
             </div>
           </div>
+          
  
     
 {{-- <div class="col-xl-7">

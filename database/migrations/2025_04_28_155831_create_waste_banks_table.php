@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('wtb_name_id'); // ID user
             $table->decimal('wtb_total_money', 15, 2)->default(0);
+            $table->enum('wtb_deposit_type', ['tabung', 'tunai'])->default('tabung');
             $table->timestamps();
             $table->softDeletes();
             $table->renameColumn('deleted_at', 'deleted_at');

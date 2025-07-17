@@ -2,90 +2,136 @@
 @push('link')
 <link rel="stylesheet" href="{{ asset('vuexy/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
 @endpush
 
 @section('content')
 <div class="body-wrapper mt-4">
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-8 d-flex align-items-stretch">
-      <div class="card w-100 bg-primary-subtle overflow-hidden shadow-none">
-        <div class="card-body position-relative">
-          <div class="row">
-            <div class="col-sm-7">
-              <div class="d-flex align-items-center mb-7">
-                <div class="rounded-circle overflow-hidden me-6">
-                  <img src="{{ asset('modernize\assets\images\profile\user-1.jpg')}}" alt="modernize-img" width="40" height="40')}}">
-                </div>
-                <h5 class="fw-semibold mb-0 fs-5">Welcome back Mathew Anderson!</h5>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center gap-4 mb-4">
+      <div class="position-relative">
+        <div class="border border-2 border-primary rounded-circle">
+          <img src="{{ asset('modernize/assets/images/profile/user-1.jpg') }}" class="rounded-circle m-1" alt="user1" width="60" />
+        </div>
+      </div>
+      <div>
+        <h3 class="fw-semibold">Selamat Datang {{ auth()->user()->name }}!</h3>
+        @php
+        \Carbon\Carbon::setLocale('id');
+        $tanggal = \Carbon\Carbon::now();
+        @endphp
+        <span>Semangat beraktivitas - {{ $tanggal->translatedFormat('d F Y') }}</span>
+      </div>
+    </div>
+
+    <div class="body-wrapper mt-4">
+      <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="row pb-4">
+          {{-- KIRI: Rekap Ringkas --}}
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="d-flex flex-column align-items-start w-100">
+              <div class="text-start">
+                <h5 class="card-title fw-semibold">Rekap Bank Sampah</h5>
+                <span>Tahun {{ now()->format('Y') }}</span>
               </div>
-              <div class="d-flex align-items-center">
-                <div class="border-end pe-4 border-muted border-opacity-10">
-                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">$2,340<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i>
-                  </h3>
-                  <p class="mb-0 text-dark">Today’s Sales</p>
-                </div>
-                <div class="ps-4">
-                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">35%<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i>
-                  </h3>
-                  <p class="mb-0 text-dark">Overall Performance</p>
-                </div>
+              <div class="mt-lg-auto mt-4 mb-4">
+                <span class="text-dark">Total Sampah yang Terkumpul</span>
+                <h2 class="mt-2 fw-bold">{{ number_format($totalBerat, 2, ',', '.') }} kg</h2>
               </div>
             </div>
-            <div class="col-sm-5">
-                <div class="welcome-bg-img mb-n7 text-end">
-                  <img src="{{ asset('modernize\assets\images\backgrounds\welcome-bg.svg')}}" alt="modernize-img" class="img-fluid">
-                </div>
+          </div>
+    
+          {{-- KANAN: Grafik Berat Sampah --}}
+          <div class="col-lg-8">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-3">Grafik Berat Sampah per Bulan</h5>
+                <canvas id="beratSampahChart" height="100"></canvas>
+              </div> 
+            </div>
+          </div>
+    
+      {{-- BAWAH: Statistik --}}
+      <br>
+      <div class="col-12">
+        <div class="border-top">
+          <div class="row gx-0">
+            {{-- Box 1 --}}
+            <div class="col-md-4 border-end">
+              <div class="p-4 py-3 py-md-4">
+                <p class="fs-5 text-danger mb-0">
+                  <span class="text-danger">
+                    <span class="bg-danger rounded-circle d-inline-block me-1" style="width:8px; height:8px;"></span>
+                  </span>Total Dana yang ditarik tunai
+                <h3 class="mt-2 mb-0">Rp {{ number_format($danaDiambil, 0, ',', '.') }}</h3>
+              </div>
+            </div>
+    
+            {{-- Box 2 --}}
+            <div class="col-md-4 border-end">
+              <div class="p-4 py-3 py-md-4">
+                <p class="fs-5 text-primary mb-0">
+                  <span class="bg-primary rounded-circle d-inline-block me-1" style="width:8px; height:8px;"></span>
+                  </span>Total warga yang menabung
+                </p>
+                <h3 class="mt-2 mb-0">{{ $jumlahPenabung }} Warga</h3>
+              </div>
+            </div>
+    
+            {{-- Box 3 --}}
+            <div class="col-md-4">
+              <div class="p-4 py-3 py-md-4">
+                <p class="fs-5 text-info mb-0">
+                  <span class="bg-info rounded-circle d-inline-block me-1" style="width:8px; height:8px;"></span>
+                  Total saldo bank sampah
+                </p>
+                <h3 class="mt-2 mb-0">Rp {{ number_format($totalUang, 0, ',', '.') }}</h3>
               </div>
             </div>
           </div>
         </div>
       </div>
-          </div>
-        </div>
-      </div>
+    </div>
 
 
-{{-- <div class="col-xl-7">
-<div class="card" style="width: 100%; height: 250px;">
-  <div class="d-flex align-items-end row">
-      <div class="col-7">
-          <div class="card-body text-nowrap">
-              <h5 class="card-title mb-0">Selamat Datang<span class="h4"> {{ Auth::user()->name }}  👋🏻</span></h5>
-              <br>
-              <p class="mb-2">Terima kasih telah aktif memantau kegiatan dan pelayanan warga di lingkungan Anda.</p>
-              <p class="mb-2">Mari bersama wujudkan lingkungan yang bersih, sehat, dan tertib.</p>
-              <h4 class="text-primary mb-1">$48.9k</h4>
-              <a href="javascript:;" class="btn btn-primary">View Sales</a>
-          </div>
-      </div>
-      <div class="col-5 text-center text-sm-left">
-          <div class="card-body pb-0 px-0 px-md-4">
-              <img
-                  src="{{asset ('vuexy/assets/img/illustrations/card-advance-sale.png')}}"
-                  height="140"
-                  alt="view sales" />
-          </div>
-      </div>
   </div>
 </div>
-</div> --}}
 
     @endsection
 @push('script')
-<script src="{{ asset('vuexy\assets\js\tables-datatables-advanced.js') }}"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="{{ asset('modernize/assets/js/dashboards/dashboard2.js')}}"></script>
-
-<script src="{{ asset('vuexy\assets/js/datatable/datatable-advanced.init.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    function handleColorTheme(e) {
-      document.documentElement.setAttribute("data-color-theme", e);
+  const ctx = document.getElementById('beratSampahChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: @json($bulanLabels),
+      datasets: [{
+        label: 'Berat Sampah (kg)',
+        data: @json($beratPerBulan),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        borderWidth: 3,
+        tension: 0.4,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
     }
-  </script>
+  });
+</script>
 @endpush

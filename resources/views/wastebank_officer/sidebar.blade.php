@@ -29,7 +29,7 @@
             </svg>
           </span>
         </span>
-        <span class="app-brand-text demo menu-text fw-bold ms-3">Vuexy</span>
+        <span class="app-brand-text demo menu-text fw-bold ms-3">SIRABS</span>
       </a>
   
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -73,18 +73,30 @@
   
         </ul>
       </li>
-      <!-- Forms & Tables -->
-      <li class="menu-header small">
+       <!-- Apps & Pages -->
+       <li class="menu-header small">
         <span class="menu-header-text" data-i18n="Data Laporan">Data Laporan</span>
       </li>
+      <!-- e-commerce-app menu start -->
       <li class="menu-item">
-        <a
-          href="#"
-          target="_blank"
-          class="menu-link">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon icon-base ti tabler-file-description"></i>
           <div data-i18n="Laporan">Laporan</div>
         </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="/wastebank_officer/submission" class="menu-link">
+              <div data-i18n="Laporan Penyerahan Dana Retribusi">Laporan Penyerahan Dana Retribusi</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="/wastebank_officer/waste_bank" class="menu-link">
+              <div data-i18n="Laporan Bank Sampah">Laporan Bank Sampah</div>
+            </a>
+          </li>
+  
+        </ul>
       </li>
+      <!-- Forms & Tables -->
     </ul>
   </aside>

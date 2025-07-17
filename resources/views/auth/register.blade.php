@@ -109,9 +109,6 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-1">Adventure starts here 🚀</h4>
-              <p class="mb-6">Make your app management easy and fun!</p>
-
               <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="mb-6 form-control-validation">
@@ -125,8 +122,16 @@
                     autofocus />
                 </div>
                 <div class="mb-6 form-control-validation">
-                  <label for="email" class="form-label" :value="__('Email')" >Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" :value="old('email')" required autocomplete="username" />
+                  <label for="email" class="form-label">Email</label>
+                  <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required />
+                
+                  @error('email')
+                    @if ($message === 'The email has already been taken.')
+                      <div class="text-danger mt-1">Email sudah terdaftar, silakan gunakan yang lain.</div>
+                    @else
+                      <div class="text-danger mt-1">{{ $message }}</div>
+                    @endif
+                  @enderror
                 </div>
                 <div class="mb-6 form-password-toggle form-control-validation">
                   <label class="form-label" for="password" :value="__('Password')" >Password</label>
@@ -170,6 +175,23 @@
     <div class="text-danger mt-1">{{ $message }}</div>
 @enderror
                   </div>
+                  <div>
+                    <label for="nik">NIK</label>
+                    <input id="nik" class="form-control @error('nik') is-invalid @enderror" type="text" name="nik" value="{{ old('nik') }}" required />
+  @error('nik')
+  @if ($message === 'The nik has already been taken.')
+  <div class="text-danger mt-1">NIK sudah terdaftar, silakan gunakan yang lain.</div>
+@else
+  <div class="text-danger mt-1">{{ $message }}</div>
+@endif
+  @enderror
+                </div>
+                
+                <!-- Nomor KK -->
+                <div class="mt-4">
+                    <label for="no_kk">Nomor KK</label>
+                    <input id="no_kk" class="form-control @error('nik') is-invalid @enderror" type="text" name="no_kk" required />
+                </div>
                 <div class="my-8 form-control-validation">
                   <div class="form-check mb-0 ms-2">
                     <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
@@ -260,71 +282,3 @@
   </body>
 </html>
 
-
-
-{{-- <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <!-- Area Scope Selection -->
-<div class="mt-4">
-    <x-input-label for="usr_scope_id" :value="__('Pilih RT')" />
-    <select name="usr_scope_id" id="usr_scope_id" class="block mt-1 w-full">
-        <option value="">-- Pilih RT --</option>
-        @foreach ($areaScopes as $area)
-            <option value="{{ $area->asc_id }}">
-                {{ $area->asc_level }} {{ $area->asc_number }}
-            </option>
-        @endforeach
-    </select>
-    <x-input-error :messages="$errors->get('usr_scope_id')" class="mt-2" />
-</div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}

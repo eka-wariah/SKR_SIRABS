@@ -15,6 +15,8 @@ return new class extends Migration
             $table->bigIncrements('usr_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('nik')->unique();
+            $table->foreignId('household_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum('gender', ['Laki-laki', 'Perempuan'])->nullable();
             $table->string('profile_photo')->nullable();
             $table->string('phone')->nullable();

@@ -43,6 +43,7 @@
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9">
                       <button input type="submit" class="btn btn-primary" value="Kirim" id="">Kirim</button>
+                      <a href="/rw_leader/area_scope" class="btn btn-primary">Kembali</a>
                     </div>
                   </div>
           </form>

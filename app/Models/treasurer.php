@@ -11,8 +11,10 @@ class treasurer extends Model
     use HasFactory, SoftDeletes;
     protected $primaryKey = 'trs_id';
     protected $fillable = ['trs_name_id', 'trs_area_id'];
-    public $timestamps = false;
+    public $timestamps = true;
     protected $dates = ['trs_deleted_at'];
+
+
 
     public function user()
     {

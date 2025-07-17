@@ -18,4 +18,5 @@ class WasteBankDetaiL extends Model
     {
         return $this->belongsTo(waste_bank::class);
     }
+    
 }
