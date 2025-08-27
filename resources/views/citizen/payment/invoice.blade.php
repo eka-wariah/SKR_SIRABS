@@ -18,7 +18,7 @@
                     <div class="invoice-header d-flex align-items-center border-bottom p-3">
                         <h4 class="text-uppercase mb-0">Bukti Pembayaran</h4>
                         <div class="ms-auto">
-                            <h4 class="invoice-number">#INV{{ $payment->pyn_id }}</h4>
+                            {{-- <h4 class="invoice-number">#INV{{ $payment->pyn_id }}</h4> --}}
                         </div>
                     </div>
                     <div class="p-3" id="custom-invoice">
@@ -89,14 +89,16 @@
                                 </div>
         
                                 <div class="col-md-12 text-end mt-4">
-                                  <a href="/citizen/payment" class="btn btn-primary me-2 d-print-none">
-                                    <i class="ti ti-arrow-left"></i> Kembali ke Beranda
-                                  </a>
+                                    <a href="/citizen/history" class="btn btn-primary me-2 d-print-none">
+                                        <iconify-icon icon="line-md:arrow-align-left" class="menu-icon align-middle me-1" style="font-size: 1.2rem;"></iconify-icon>
+                                        Kembali ke Sebelumnya
+                                      </a>
                                     <button class="btn btn-primary print-page d-print-none" type="button">
-                                        <i class="ti ti-printer fs-5"></i> Cetak Bukti
+                                      <iconify-icon icon="line-md:cloud-down" class="menu-icon align-middle me-1" style="font-size: 1.2rem;"></iconify-icon>
+                                      Cetak Bukti
                                     </button>
-                                   
-                                </div>
+                                  </div>
+                                  
 
 
                                 

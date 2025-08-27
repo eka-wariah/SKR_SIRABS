@@ -39,14 +39,15 @@
       <li class="menu-item">
         <a
           href="/rw_leader/area_scope" class="menu-link">
-          <i class="menu-icon icon-base ti tabler-map"></i>
+          <iconify-icon icon="tabler:map-2" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon> 
           <div data-i18n="Data Lingkup Wilayah">Data Lingkup Wilayah</div>
         </a>
       </li>
       <li class="menu-item">
         <a
           href="/rw_leader/data_rt" class="menu-link">
-          <i class="menu-icon icon-base ti tabler-users"></i>
+          <iconify-icon icon="tabler:users" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          
           <div data-i18n="Data RT">Data RT</div>
         </a>
       </li>
@@ -56,10 +57,8 @@
       </li>
       <li class="menu-item">
         <a
-          href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-          target="_blank"
-          class="menu-link">
-          <i class="menu-icon icon-base ti tabler-file-description"></i>
+          href="/rw_leader/report"class="menu-link">
+          <iconify-icon icon="tabler:file-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
           <div data-i18n="Pembayaran Retribusi">Pembayaran Retribusi</div>
         </a>
       </li>

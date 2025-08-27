@@ -1,284 +1,300 @@
 <!doctype html>
+<html lang="en" class="layout-wide customizer-hide" dir="ltr" data-skin="default" data-assets-path="{{ asset('vuexy/assets/') }}" data-template="vertical-menu-template" data-bs-theme="light">
 
-<html
-  lang="en"
-  class="layout-wide customizer-hide"
-  dir="ltr"
-  data-skin="default"
-  data-assets-path="../../assets/"
-  data-template="horizontal-menu-template-no-customizer"
-  data-bs-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Register Warga - Multi Step | Vuexy</title>
 
-    <title>Demo: Register Basic - Pages | Vuexy - Bootstrap Dashboard PRO</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{{ asset('vuexy/assets/img/favicon/favicon.ico')}}" />
 
-    <meta name="description" content="" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('vuexy/assets/img/favicon/favicon.ico')}}" />
+  <!-- Core CSS -->
+  <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/css/core.css')}}" />
+  <link rel="stylesheet" href="{{ asset('vuexy/assets/css/demo.css')}}" />
+  <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/libs/bs-stepper/bs-stepper.css')}}" />
+  <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/fonts/iconify-icons.css')}}" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
-      rel="stylesheet" />
+  <!-- Page CSS -->
+  <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/css/pages/page-auth.css')}}" />
+  <link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css')}}" />
 
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/fonts/iconify-icons.css')}}" />
+  <!-- Helpers -->
+  <script src="{{ asset('vuexy/assets/vendor/js/helpers.js')}}"></script>
+  <script src="{{ asset('vuexy/assets/js/config.js')}}"></script>
+</head>
 
-    <!-- Core CSS -->
-    <!-- build:css assets/vendor/css/theme.css  -->
-
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/node-waves/node-waves.css')}}" />
-
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/css/core.css')}}" />
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/css/demo.css')}}" />
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/bs-stepper/bs-stepper.css')}}" />
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/bootstrap-select/bootstrap-select.css')}}" />
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/select2/select2.css')}}" />
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/@form-validation/form-validation.css')}}" />
-
-
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
-
-    <!-- endbuild -->
-
-    <!-- Vendor -->
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/libs/@form-validation/form-validation.css')}}" />
-
-    <!-- Page CSS -->
-    <!-- Page -->
-    <link rel="stylesheet" href="{{ asset ('vuexy/assets/vendor/css/pages/page-auth.css')}}" />
-
-    <!-- Helpers -->
-    <script src="{{ asset ('vuexy/assets/vendor/js/helpers.js')}}"></script>
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-
-    <script src="{{ asset ('vuexy/assets/js/config.js')}}"></script>
-  </head>
-
-  <body>
-    <!-- Content -->
-
-    <div class="container-xxl">
-      <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner py-6">
-          <!-- Register Card -->
-          <div class="card">
-            <div class="card-body">
-              <!-- Logo -->
-              <div class="app-brand justify-content-center mb-6">
-                <a href="index.html" class="app-brand-link">
-                  <span class="app-brand-logo demo">
-                    <span class="text-primary">
-                      <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
-                          fill="currentColor" />
-                        <path
-                          opacity="0.06"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
-                          fill="#161616" />
-                        <path
-                          opacity="0.06"
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
-                          fill="#161616" />
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
-                          fill="currentColor" />
-                      </svg>
-                    </span>
+<body>
+  <div class="authentication-wrapper authentication-cover authentication-bg">
+    <div class="authentication-inner row">
+      <div class="d-none d-lg-flex col-lg-4 align-items-center justify-content-center p-5">
+        <img src="{{ asset('modernize/assets/images/backgrounds/regis.png') }}" alt="auth" width="280" />
+      </div>
+      <div class="d-flex col-lg-8 align-items-center justify-content-center authentication-bg p-5">
+        <div class="w-px-700">
+          <div id="multiStepsValidation" class="bs-stepper">
+            <!-- Header Stepper -->
+            <div class="bs-stepper-header">
+              <div class="step" data-target="#step1">
+                <button type="button" class="step-trigger">
+                  <span class="bs-stepper-circle">1</span>
+                  <span class="bs-stepper-label">
+                    <span class="bs-stepper-title">Akun</span>
+                    <span class="bs-stepper-subtitle">Data Login</span>
                   </span>
-                  <span class="app-brand-text demo text-heading fw-bold">Vuexy</span>
-                </a>
+                </button>
               </div>
-              <!-- /Logo -->
-              <form method="POST" action="{{ route('register') }}">
-                @csrf
-                <div class="mb-6 form-control-validation">
-                  <label for="name" class="form-label":value="__('Name')">Username</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="name"
-                    name="name" :value="old('name')" required autofocus autocomplete="name"
-                    placeholder="Enter your username"
-                    autofocus />
-                </div>
-                <div class="mb-6 form-control-validation">
-                  <label for="email" class="form-label">Email</label>
-                  <input id="email" class="form-control @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" required />
-                
-                  @error('email')
-                    @if ($message === 'The email has already been taken.')
-                      <div class="text-danger mt-1">Email sudah terdaftar, silakan gunakan yang lain.</div>
-                    @else
-                      <div class="text-danger mt-1">{{ $message }}</div>
-                    @endif
-                  @enderror
-                </div>
-                <div class="mb-6 form-password-toggle form-control-validation">
-                  <label class="form-label" for="password" :value="__('Password')" >Password</label>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password"
-                      required autocomplete="new-password" />
-                    <span class="input-group-text cursor-pointer"><i class="icon-base ti tabler-eye-off"></i></span>
-                  </div>
-                </div>
-                <div class="mb-6 form-password-toggle form-control-validation">
-                    <label class="form-label" for="password_confirmation" :value="__('Confirm Password')" >Confirm Password</label>
-                    <div class="input-group input-group-merge">
-                      <input
-                        type="password"
-                        id="password_confirmation"
-                        class="form-control"
-                        name="password_confirmation"
-                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                        aria-describedby="password"
-                        required autocomplete="new-password" />
-                      <span class="input-group-text cursor-pointer"><i class="icon-base ti tabler-eye-off"></i></span>
-                    </div>
-                  </div>
-                  <div class="mb-6 form-password-toggle form-control-validation">
-                    <label class="form-label" for="usr_scope_id":value="__('Pilih RT')">State</label>
-                    <select name="usr_scope_id" id="usr_scope_id" class="select2 form-select">
-                      <option value="">-- Pilih RT --</option>
-                      @foreach ($areaScopes as $area)
-                      <option value="{{ $area->asc_id }}">
-                          {{ $area->asc_level }} {{ $area->asc_number }}
-                      </option>
-                  @endforeach
-                    </select>
-                    @error('usr_scope_id')
-    <div class="text-danger mt-1">{{ $message }}</div>
-@enderror
-                  </div>
-                  <div>
-                    <label for="nik">NIK</label>
-                    <input id="nik" class="form-control @error('nik') is-invalid @enderror" type="text" name="nik" value="{{ old('nik') }}" required />
-  @error('nik')
-  @if ($message === 'The nik has already been taken.')
-  <div class="text-danger mt-1">NIK sudah terdaftar, silakan gunakan yang lain.</div>
-@else
-  <div class="text-danger mt-1">{{ $message }}</div>
-@endif
-  @enderror
-                </div>
-                
-                <!-- Nomor KK -->
-                <div class="mt-4">
-                    <label for="no_kk">Nomor KK</label>
-                    <input id="no_kk" class="form-control @error('nik') is-invalid @enderror" type="text" name="no_kk" required />
-                </div>
-                <div class="my-8 form-control-validation">
-                  <div class="form-check mb-0 ms-2">
-                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
-                    <label class="form-check-label" for="terms-conditions">
-                      I agree to
-                      <a href="javascript:void(0);">privacy policy & terms</a>
-                    </label>
-                  </div>
-                </div>
-                <div class="flex items-center justify-end mt-4">
-                  <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                      {{ __('Already registered?') }}
-                  </a>
-                <button class="btn btn-primary d-grid w-100" type="submit">{{ __('Register') }}</button>
-                </div>
-              </form>
-
-              <p class="text-center">
-                <span>Already have an account?</span>
-                <a href="auth-login-basic.html">
-                  <span>Sign in instead</span>
-                </a>
-              </p>
-
-              <div class="divider my-6">
-                <div class="divider-text">or</div>
-              </div>
-
-              <div class="d-flex justify-content-center">
-                <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-facebook me-1_5">
-                  <i class="icon-base ti tabler-brand-facebook-filled icon-20px"></i>
-                </a>
-
-                <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-twitter me-1_5">
-                  <i class="icon-base ti tabler-brand-twitter-filled icon-20px"></i>
-                </a>
-
-                <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-github me-1_5">
-                  <i class="icon-base ti tabler-brand-github-filled icon-20px"></i>
-                </a>
-
-                <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-google-plus">
-                  <i class="icon-base ti tabler-brand-google-filled icon-20px"></i>
-                </a>
+              <div class="line"></div>
+              <div class="step" data-target="#step2">
+                <button type="button" class="step-trigger">
+                  <span class="bs-stepper-circle">2</span>
+                  <span class="bs-stepper-label">
+                    <span class="bs-stepper-title">Data Diri</span>
+                    <span class="bs-stepper-subtitle">Informasi Pribadi</span>
+                  </span>
+                </button>
               </div>
             </div>
+
+            <!-- Content Stepper -->
+            <div class="bs-stepper-content">
+              @if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Ups!</strong> Ada kesalahan pada input Anda:
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+              <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                <!-- Step 1 -->
+                <div id="step1" class="content">
+                  <div class="row">
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Username</label>
+                      <input 
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder="Contoh: kaa_123"
+                        value="{{ old('name') }}"
+                        class="form-control"
+                        required
+                        pattern="^(?!.*[_.]{2})(?![_.])[a-zA-Z0-9._]{4,20}(?<![_.])$"
+                        title="Username harus 4-20 karakter, hanya huruf, angka, titik, atau underscore. Tidak diawali/diaakhiri titik/underscore dan tidak boleh berurutan." 
+                      />
+                      <div id="name-error" class="text-danger mt-1"></div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Email</label>
+                      <input type="email" name="email" value="{{ old('email') }}" class="form-control" required />
+                    </div>
+                    <div class="col-sm-6 form-password-toggle form-control-validation">
+                      <label class="form-label" for="password">Password</label>
+                      <div class="input-group input-group-merge">
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          class="form-control"
+                          placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                          aria-describedby="toggle-password" />
+                        <span class="input-group-text cursor-pointer" id="toggle-password">
+                          <i class="icon-base ti tabler-eye-off"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 form-password-toggle form-control-validation">
+                      <label class="form-label" for="password_confirmation">Konfirmasi Password</label>
+                      <div class="input-group input-group-merge">
+                        <input
+                          type="password"
+                          id="password_confirmation"
+                          name="password_confirmation"
+                          class="form-control"
+                          placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                          aria-describedby="toggle-password-confirm" />
+                        <span class="input-group-text cursor-pointer" id="toggle-password-confirm">
+                          <i class="icon-base ti tabler-eye-off"></i>
+                        </span>
+                      </div>
+                      <div id="password-error" class="text-danger mt-1"></div>
+                    </div>
+                    
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary btn-next">Selanjutnya</button>
+                  </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="step2" class="content">
+                  <div class="row">
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Nomor KK</label>
+                      <input type="text"
+                             name="no_kk"
+                             value="{{ old('no_kk') }}"
+                             class="form-control"
+                             inputmode="numeric"
+                             pattern="[0-9]*"
+                             maxlength="16"
+                             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                             required />
+                             @error('no_kk')
+    <div class="invalid-feedback">
+      {{ $message }}
+    </div>
+  @enderror
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">NIK</label>
+                      <input type="text"
+                             name="nik"
+                             value="{{ old('nik') }}"
+                             class="form-control"
+                             inputmode="numeric"
+                             pattern="[0-9]*"
+                             maxlength="16"
+                             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                             required />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Nama Depan</label>
+                      <input type="text" name="first_name" value="{{ old('first_name') }}" class="form-control" required />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Nama Belakang</label>
+                      <input type="text" name="last_name" value="{{ old('last_name') }}" class="form-control" />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Nomor HP</label>
+                      <div class="input-group">
+                        <span class="input-group-text">+62</span>
+                        <input type="text"
+                               name="phone"
+                               value="{{ old('phone') }}"
+                               class="form-control"
+                               inputmode="numeric"
+                               pattern="[0-9]*"
+                               maxlength="16"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
+                               required />
+                      </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                      <label class="form-label">Pilih RT</label>
+                      <select name="usr_scope_id" class="form-select" required>
+                        <option value="">-- Pilih RT --</option>
+                        @foreach ($areaScopes as $area)
+                          <option value="{{ $area->asc_id }}">{{ $area->asc_level }} {{ $area->asc_number }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                      <label class="form-label">Alamat Lengkap</label>
+                      <textarea name="address" rows="3" class="form-control" required>{{ old('address') }}</textarea>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-prev">Sebelumnya</button>
+                    <button type="submit" class="btn btn-success">Daftar</button>
+                  </div>
+                </div>
+                <p class="text-center">
+                  <span>Apakah sudah memiliki akun?</span>
+                  <a href="/login">
+                    <span>Login</span>
+                  </a>
+                </p>
+
+              </form>
+            </div>
           </div>
-          <!-- Register Card -->
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- / Content -->
+  <!-- JS Dependencies -->
+  <script src="{{ asset('vuexy/assets/vendor/libs/jquery/jquery.js') }}"></script>
+  <script src="{{ asset('vuexy/assets/vendor/libs/bootstrap/bootstrap.js') }}"></script>
+  <script src="{{ asset('vuexy/assets/vendor/libs/bs-stepper/bs-stepper.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggles = document.querySelectorAll('.input-group-text.cursor-pointer');
+  
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', function () {
+          const input = this.parentElement.querySelector('input');
+          const icon = this.querySelector('i');
+  
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('tabler-eye-off');
+            icon.classList.add('tabler-eye');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('tabler-eye');
+            icon.classList.add('tabler-eye-off');
+          }
+        });
+      });
+    });
+  </script>
 
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/theme.js -->
+  <!-- VALIDASI DAN STEPPER -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const stepperEl = document.querySelector('#multiStepsValidation');
+      const stepper = new Stepper(stepperEl, { linear: false, animation: true });
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/jquery/jquery.js')}}"></script>
+      const btnNext = document.querySelector('.btn-next');
+      const btnPrev = document.querySelector('.btn-prev');
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/popper/popper.js')}}"></script>
-    <script src="{{ asset ('vuexy/assets/vendor/js/bootstrap.js')}}"></script>
-    <script src="{{ asset ('vuexy/assets/vendor/libs/node-waves/node-waves.js')}}"></script>
+      btnNext.addEventListener('click', function (e) {
+        const name = document.getElementById('name').value.trim();
+        const nameError = document.getElementById('name-error');
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('password_confirmation').value.trim();
+        const errorDiv = document.getElementById('password-error');
+        let errors = [];
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/@algolia/autocomplete-js.js')}}"></script>
+        nameError.innerHTML = '';
+        errorDiv.innerHTML = '';
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
+        const nameRegex = /^(?!.*[_.]{2})(?![_.])[a-zA-Z0-9._]{4,20}(?<![_.])$/;
+  if (!nameRegex.test(name)) {
+    nameError.innerHTML = 'Username harus 4-20 karakter, hanya huruf, angka, titik, atau underscore. Tidak diawali/diaakhiri titik/underscore dan tidak boleh berurutan.';
+    return; // Stop stepper
+  }
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/hammer/hammer.js')}}"></script>
+        if (password.length < 8) {
+          errors.push('Password minimal 8 karakter.');
+        }
 
-    <script src="{{ asset ('vuexy/assets/vendor/libs/i18n/i18n.js')}}"></script>
+        if (password !== confirmPassword) {
+          errors.push('Password dan konfirmasi tidak cocok.');
+        }
 
-    <script src="{{ asset ('vuexy/assets/vendor/js/menu.js')}}"></script>
+        if (errors.length > 0) {
+          errorDiv.innerHTML = errors.join('<br>');
+        } else {
+          stepper.next();
+        }
+      });
 
-    <!-- endbuild -->
-
-    <!-- Vendors JS -->
-    <script src="{{ asset ('vuexy/assets/vendor/libs/@form-validation/popular.js')}}"></script>
-    <script src="{{ asset ('vuexy/assets/vendor/libs/@form-validation/bootstrap5.js')}}"></script>
-    <script src="{{ asset ('vuexy/assets/vendor/libs/select2/select2.js')}}"></script>
-    <script src="{{ asset ('vuexy/assets/vendor/libs/@form-validation/auto-focus.js')}}"></script>
-
-    <!-- Main JS -->
-
-    <script src="{{ asset ('vuexy/assets/js/main.js')}}"></script>
-
-    <!-- Page JS -->
-    <script src="{{ asset ('vuexy/assets/js/pages-auth.js')}}"></script>
-  </body>
+      btnPrev.addEventListener('click', () => stepper.previous());
+    });
+  </script>
+</body>
 </html>
-

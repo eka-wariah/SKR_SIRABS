@@ -36,7 +36,7 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
-
+ 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
@@ -45,16 +45,29 @@ class ProfileController extends Controller
 
         $areaScopes = area_scope::all(); 
         $user = $request->user();
-    if ($user->hasRole('rw_leader')) {
-        $layout = 'rw_leader.master_rw-leader';
-    } elseif ($user->hasRole('treasurer')) {
-        $layout = 'treasurer.master_treasurer';
-    } else {
-        $layout = 'layouts.app'; // default layout
-    }
+        if ($user->hasRole('rw_leader')) {
+            $layout = 'rw_leader.master_rw-leader';
+            $routeName = 'rw_leader.profile.update';
+            
+        } elseif ($user->hasRole('treasurer')) {
+            $layout = 'treasurer.master_treasurer';
+            $routeName = 'treasurer.profile.update';
+        } elseif ($user->hasRole('citizen')) {
+            $layout = 'citizen.master_citizen';
+            $routeName = 'citizen.profile.update';
+        }
+        elseif ($user->hasRole('rt_leader')) {
+                $layout = 'rt_leader.master_rt_leader';
+                $routeName = 'rt_leader.profile.update';
+        } else {
+            $layout = 'layouts.app'; 
+            $routeName = 'profile.update';// default
+        }
         return view('profile.edit2', [
             'user' => $request->user(), 
             'areaScopes' => $areaScopes,
+            'layout'=>$layout,
+            'routeName'=>$routeName,
             
         ]);
     }

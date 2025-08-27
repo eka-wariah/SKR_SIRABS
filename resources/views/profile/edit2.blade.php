@@ -1,5 +1,5 @@
 
-@extends('citizen.master_citizen')
+@extends($layout)
 
 @push('link')
     
@@ -17,7 +17,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
         
-            <form action="{{ route('profile.update_photo') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route($routeName) }}" method="POST" enctype="multipart/form-data">
               @csrf
               @method('PATCH')
              <div class="card mb-6">
@@ -57,14 +57,14 @@
     <input class="form-control" type="email" id="email" name="email" value="{{ old('email', $user->email) }}" />
   </div>
 
-  <div class="col-md-6">
+  {{-- <div class="col-md-6">
     <label class="form-label" for="gender">Jenis Kelamin</label>
     <select name="gender" class="select2 form-select">
       <option value="">Select</option>
       <option value="Laki-laki" {{ old('gender', $user->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-Laki</option>
       <option value="Perempuan" {{ old('gender', $user->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
     </select>
-  </div>
+  </div> --}}
 
    {{-- Phone --}}
    <div class="col-md-6">
@@ -73,6 +73,23 @@
       <span class="input-group-text">ID (+62)</span>
     <input type="text" id="phone" name="phone" class="form-control"  placeholder="81234567890"  value="{{ old('phone', $user->phone) }}" />
   </div>
+</div>
+<div class="col-md-2">
+  <label for="usr_scope_id" class="form-label">RT</label>
+  <div class="form-label">
+    <select name="usr_scope_id" class="form-select">
+      @foreach ($areaScopes as $area)
+        <option value="{{ $area->asc_id }}" {{ old('usr_scope_id', $user->usr_scope_id) == $area->asc_id ? 'selected' : '' }}>
+          {{ $area->asc_level }} {{ $area->asc_number }}
+        </option>
+      @endforeach
+    </select>
+    {{-- <label for="usr_scope_id">RT</label> --}}
+  </div>
+</div>
+<div class="col-md-2">
+  <label class="form-label">RW</label>
+  <input type="text" class="form-control" value="RW 04" disabled>
 </div>
 </div>
  {{-- Alamat --}}
@@ -86,7 +103,7 @@
   </div>
 
   {{-- RT --}}
-  <div class="col-md-2">
+  {{-- <div class="col-md-2">
     <label for="usr_scope_id" class="form-label">RT</label>
     <div class="form-label">
       <select name="usr_scope_id" class="form-select">
@@ -96,42 +113,42 @@
           </option>
         @endforeach
       </select>
-      {{-- <label for="usr_scope_id">RT</label> --}}
+      {{-- <label for="usr_scope_id">RT</label> 
     </div>
-  </div>
+  </div> --}}
 
   {{-- RW (tetap) --}}
-  <div class="col-md-2">
+  {{-- <div class="col-md-2">
     <label class="form-label">RW</label>
     <input type="text" class="form-control" value="RW 04" disabled>
-  </div>
+  </div> --}}
 
   {{-- Desa --}}
-  <div class="col-md-4">
+  {{-- <div class="col-md-4">
     <label for="desa" class="form-label">Desa</label>
     <div class="form-label">
       <input type="text" class="form-control" id="village" name="village" placeholder="Desa Mekarsari" value="{{ old('village', $user->village) }}">
       
     </div>
-  </div>
+  </div> --}}
 
   {{-- Kecamatan --}}
-  <div class="col-md-4">
+  {{-- <div class="col-md-4">
     <label for="kecamatan" class="form-label">Kecamatan</label>
     <div class="form-label">
       <input type="text" class="form-control" id="subdistrict" name="subdistrict" placeholder="Kec. Cibinong" value="{{ old('subdistrict', $user->subdistrict) }}">
   
     </div>
-  </div>
+  </div> --}}
 
   {{-- Kabupaten --}}
-  <div class="col-md-4">
+  {{-- <div class="col-md-4">
     <label for="kabupaten" class="form-label">Kabupaten</label>
     <div class="form-label">
       <input type="text" class="form-control" id="regency" name="regency" placeholder="Kab. Bandung" value="{{ old('regency', $user->regency) }}">
     
     </div>
-  </div>
+  </div> --}}
 </div>
 <div class="mt-2">
   <button type="submit" class="btn btn-primary me-3">Simpan</button>

@@ -14,8 +14,13 @@ class TreasurerSeeder extends Seeder
     public function run(): void
     {
         treasurer::create([
-            'trs_name_id' => 3,
+            'trs_name_id' => 4,
             'trs_area_id' => 1
         ]);
+        treasurer::create([
+            'trs_name_id' => 5,
+            'trs_area_id' => 2
+        ]);
+
     }
 }

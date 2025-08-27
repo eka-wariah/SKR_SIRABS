@@ -24,21 +24,6 @@ class TreasurerController extends Controller
         })
         ->with('treasurer.areaScope')
         ->first();
-    //     $loggedInScopeId = auth()->user()->usr_scope_id;
-
-    // // Ambil hanya satu bendahara di wilayah RT user login
-    // $treasurers = User::role('treasurer')
-    //     ->where('usr_scope_id', $loggedInScopeId)
-    //     ->with('treasurer.areaScope')
-    //     ->first(); // Hanya satu
-
-    // $jumlahWarga = User::where('usr_scope_id', $loggedInScopeId)
-    //     ->role('citizen')
-    //     ->count();
-
-    // $wargaCalonBendahara = User::where('usr_scope_id', $loggedInScopeId)
-    //     ->role('citizen')
-    //     ->get();
         $title = 'Delete User!';
         $text = "Are you sure you want to delete?";
         confirmDelete($title, $text);
@@ -47,8 +32,8 @@ class TreasurerController extends Controller
 
     public function create()
     {
-        $areaScopes = area_scope::all();
-        return view('rt_leader.treasurer.create', compact('areaScopes'));
+        $rtArea = auth()->user()->areaScope; // ambil scope RT user login
+    return view('rt_leader.treasurer.create', compact('rtArea'));
     }
 
     public function store(Request $request)
@@ -74,14 +59,26 @@ class TreasurerController extends Controller
         return redirect()->route('treasurer.index')->with('success', 'Berhasil menjadikan bendahara!');
     }
 
-    public function getCitizens($asc_id)
+    public function getCitizens(Request $request, $asc_id)
     {
-        $citizens = User::where('usr_scope_id', $asc_id)
-            ->role('citizen')
-            ->select('usr_id', 'name')
-            ->get();
+        $search = request('term'); // ← ambil keyword pencarian dari select2
 
-        return response()->json($citizens);
+    $citizens = User::where('usr_scope_id', $asc_id)
+        ->role('citizen')
+        ->where('status', 1)
+        ->when($search, function ($query, $search) {
+            $query->where('name', 'LIKE', '%' . $search . '%');
+        })
+        ->select('usr_id', 'first_name', 'last_name')
+        ->get()
+        ->map(function ($citizen) {
+            return [
+                'id' => $citizen->usr_id,
+                'text' =>trim($citizen->first_name . ' ' . $citizen->last_name)
+            ];
+        });
+
+    return response()->json($citizens);
     }
 
 

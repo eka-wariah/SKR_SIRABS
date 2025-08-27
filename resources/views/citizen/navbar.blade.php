@@ -152,7 +152,7 @@
           </li>
           <li><hr class="dropdown-divider my-1"></li>
           <li>
-            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+            <a class="dropdown-item" href="{{ route('citizen.profile.edit') }}">
               <i class="icon-base ti tabler-user me-3"></i>
               <span class="align-middle">Profil Saya</span>
             </a>

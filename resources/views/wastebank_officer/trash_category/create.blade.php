@@ -9,9 +9,9 @@
 @endsection
 
 @section('content')
-   <div class="row">
-    <div class="col-lg-12">
-        <div class="card">
+<div class="row" style="padding: 25px">
+  <div class="col-lg-12">
+      <div class="card">
           <div class="px-4 py-3 border-bottom">
             <h4 class="card-title mb-0">Tambah Kategori</h4>
           </div>

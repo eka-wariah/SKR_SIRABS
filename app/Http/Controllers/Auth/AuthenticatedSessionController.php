@@ -27,6 +27,13 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user = Auth::user();
+
+
+        if ($user->hasRole('citizen') && $user->status === 0) {
+            Auth::logout(); // keluarin user dulu
+            return redirect()->route('verification.pending'); // arahkan ke halaman pending
+        }
 
         if (Auth::user()->hasRole('rw_leader')){
             return redirect()->to('rw_leader');

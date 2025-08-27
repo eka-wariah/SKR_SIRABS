@@ -1,4 +1,4 @@
-@extends('wastebank_officer.master_officer')
+@extends('treasurer.master_treasurer')
 
 @push('link')
     

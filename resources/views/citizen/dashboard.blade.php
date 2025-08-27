@@ -36,21 +36,13 @@
       <div class="col-lg-6 d-flex flex-column gap-3">
         
         {{-- Profil Singkat --}}
-        <div class="card card-body position-relative" style="background: #fff; border-left: 4px solid #7352ff;">
-          <span class="side-stick" style="position:absolute; left:0; top:0; height:100%; width:4px; background:#7352ff;"></span>
-          <h5 class="mb-1">Profil Singkat</h5>
-          <br>
-          <p class="mb-1"><strong>Nama:</strong> {{ Auth::user()->name }}</p>
-          <p class="mb-1"><strong>Alamat:</strong> {{ Auth::user()->address }}</p>
-          <p class="mb-1"><strong>Nomor WhatsApp:</strong> {{ Auth::user()->phone }}</p>
-          <p class="mb-1"><strong>RT/RW:</strong> {{ Auth::user()->usr_scope }}/04</p>
-        </div>
+      
 
 
         {{-- Status Layanan Air --}}
         <div class="card card-body position-relative" style="background: #fff; border-left: 4px solid #7352ff;">
           <span class="side-stick" style="position:absolute; left:0; top:0; height:100%; width:4px; background:#7352ff;"></span>
-          <h5 class="mb-1">Status Layanan Air SIBEL</h5>
+          <h5 class="mb-1">Status Layanan Air Bersih</h5>
           <br>
           @if($airRegistration)
             @if($airRegistration->rgw_status == 'Menunggu Verifikasi')
@@ -76,7 +68,51 @@
           @endif
         </div>
 
-        
+        @php
+        $user = Auth::user();
+        $invoices = $invoices ?? collect(); 
+    @endphp
+    
+    <div class="card card-body" style="border-left: 4px solid #28a745;">
+        <h5 class="mb-3">Tagihan Retribusi</h5>
+    
+        @if($invoices->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Periode</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                            <th>Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($invoices as $invoice)
+                            <tr>
+                                <td>{{ $invoice->periode }}</td>
+                                <td>Rp{{ number_format($invoice->amount, 0, ',', '.') }}</td>
+                                {{-- <td>
+                                    <span class="badge bg-{{ $invoice->status == 'lunas' ? 'success' : ($invoice->status == 'pending' ? 'warning' : 'danger') }}">
+                                        {{ ucfirst($invoice->status) }}
+                                    </span>
+                                </td> --}}
+                                <td>{{ $invoice->paymentCategory->pym_name ?? '-' }}</td>
+                                <td>
+                                    <a href="{{ route('citizen.invoices.show', $invoice->inv_id) }}" class="btn btn-sm btn-primary">
+                                        Lihat Invoice
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="text-muted">Belum ada tagihan retribusi.</p>
+        @endif
+    </div>
+    
         {{-- Hubungi Ketua RT --}}
         @if($ketuaRT)
         <div class="card card-body position-relative" style="background: #fff; border-left: 4px solid #7352ff;">
@@ -99,11 +135,11 @@
                 <i class="bi bi-whatsapp"></i> WhatsApp
               </a>
             @endif
-            @if($ketuaRT->email)
+            {{-- @if($ketuaRT->email)
               <a href="mailto:{{ $ketuaRT->email }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-envelope"></i> Email
               </a>
-            @endif
+            @endif --}}
           </div>
         </div>
         @endif
@@ -116,7 +152,7 @@
             <h4 class="fw-semibold mb-1 text-white">Tabungan Bank Sampah</h4>
             <p class="fs-3 mb-3 text-white">Tahun {{ date('Y') }}</p>
             <div class="text-center mt-3">
-              <img src="{{ asset('modernize/assets/images/backgrounds/piggy.png') }}" class="img-fluid" alt="Tabungan" />
+              <img src="{{ asset('vuexy/assets/img/backgrounds/1.png') }}" class="img-fluid" alt="Tabungan" />
             </div>
           </div>
           <div class="card mx-2 mb-2 mt-n2 bg-white text-dark">

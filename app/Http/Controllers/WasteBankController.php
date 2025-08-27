@@ -85,56 +85,51 @@ class WasteBankController extends Controller
     }
 
     public function edit($id)
-    {
-        $users = User::all();
-        $trash_category = trash_category::all();
-        $detail = waste_bank_details::all();
-        $EditWasteBank = waste_bank::with('details')->findOrFail($id);
-        return view('wastebank_officer.waste_bank.edit', compact(['EditWasteBank', 'users', 'trash_category', 'detail']));
-    }
+{
+    $waste_bank = waste_bank::with('details')->findOrFail($id);
+    $users = User::all();
+    $trash_category = trash_category::all();
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'usr_id' => 'required|exists:users,usr_id',
-            'categories' => 'required|array|min:1',
-            'categories.*.trc_id' => 'required|exists:trash_categories,trc_id',
-            'categories.*.berat' => 'required|numeric|min:0.1',
-            'deposit_type' => 'required|in:tabung,tunai',
+    return view('wastebank_officer.waste_bank.edit', compact('waste_bank', 'users', 'trash_category'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'usr_id' => 'required|exists:users,usr_id',
+        'categories' => 'required|array|min:1',
+        'categories.*.trc_id' => 'required|exists:trash_categories,trc_id',
+        'categories.*.berat' => 'required|numeric|min:0.1',
+        'deposit_type' => 'required|in:tabung,tunai',
+    ]);
+
+    $waste_bank = waste_bank::findOrFail($id);
+    $waste_bank->wtb_name_id = $request->usr_id;
+    $waste_bank->wtb_deposit_type = $request->deposit_type;
+    $waste_bank->save();
+
+    // Hapus data lama
+    $waste_bank->details()->delete();
+
+    $total = 0;
+    foreach ($request->categories as $item) {
+        $trash_category = trash_category::find($item['trc_id']);
+        $sub = $item['berat'] * $trash_category->trc_price;
+        $total += $sub;
+
+        waste_bank_details::create([
+            'waste_bank_id' => $waste_bank->id,
+            'trc_id' => $item['trc_id'],
+            'berat' => $item['berat'],
+            'total' => $sub,
         ]);
-
-        $waste_bank = waste_bank::findOrFail($id);
-        waste_bank_details::where('waste_bank_id', $waste_bank->id)->delete();
-
-        $waste_bank->wtb_name_id = $request->usr_id;
-        $waste_bank->wtb_deposit_type = $request->deposit_type;
-        $waste_bank->wtb_total_money = 0;
-        $waste_bank->save();
-
-        $total = 0;
-        foreach ($request->categories as $item) {
-            $trash_category = trash_category::find($item['trc_id']);
-            $subtotal = $item['berat'] * $trash_category->trc_price;
-            $total += $subtotal;
-
-            waste_bank_details::create([
-                'waste_bank_id' => $waste_bank->id,
-                'trc_id' => $item['trc_id'],
-                'berat' => $item['berat'],
-                'total' => $subtotal,
-            ]);
-        }
-
-        $waste_bank->update(['wtb_total_money' => $total]);
-
-        $user = User::where('usr_id', $request->usr_id)->first();
-        $user->total_money = waste_bank::where('wtb_name_id', $user->usr_id)
-            ->where('wtb_deposit_type', 'tabung')
-            ->sum('wtb_total_money');
-        $user->save();
-
-        return redirect()->route('waste_bank.index')->with('success', 'Data berhasil diperbarui');
     }
+
+    $waste_bank->wtb_total_money = $total;
+    $waste_bank->save();
+
+    return redirect()->route('waste_bank.index')->with('success', 'Data berhasil diperbarui.');
+}
 
     public function destroy($id)
     {

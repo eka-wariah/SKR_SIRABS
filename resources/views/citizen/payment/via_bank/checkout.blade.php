@@ -44,10 +44,6 @@
               <span>Total</span>
               <span class="fw-semibold">Rp {{ number_format($payment->jumlah_bayar, 0, ',', '.') }}</span>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Tax</span>
-              <span class="text-muted">$4.99</span>
-            </div>
             <hr />
             <div class="d-flex justify-content-between mb-3">
               <span class="fw-bold">Total Pembayaran</span>

@@ -14,6 +14,9 @@
                 <div class="alert alert-warning m-4">
                     Semua wilayah RT sudah memiliki Ketua RT.
                 </div>
+                <div class="text-end m-4">
+                    <a href="/rw_leader/data_rt" class="btn btn-primary">Kembali</a>
+                </div>
             @else
                 <form action="{{ route('rt.store') }}" method="POST">
                     @csrf
@@ -39,6 +42,7 @@
 
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Jadikan Ketua RT</button>
+                            <a href="/rw_leader/data_rt" class="btn btn-primary">Kembali</a>
                         </div>
                     </div>
                 </form>

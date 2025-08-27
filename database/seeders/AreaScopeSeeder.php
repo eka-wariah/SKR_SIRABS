@@ -13,15 +13,11 @@ class AreaScopeSeeder extends Seeder
      */
     public function run(): void
     {
-        area_scope::create(
-            [
-            'asc_level' => 'RT',
-            'asc_number' => 0
-            ],
-            [
-                'asc_level' => 'RT',
-                'asc_number' => 2
-            ]
-    );
+        $data = [
+            ['asc_level' => 'RT', 'asc_number' => 1],
+            ['asc_level' => 'RT', 'asc_number' => 2],
+        ];
+
+        area_scope::insert($data);
     }
 }

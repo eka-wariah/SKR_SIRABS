@@ -9,14 +9,14 @@
 @endpush
 
 @section('title')
-    SITAW | Daftar Kategori Pembayaran
+    SITAW | Daftar Wilayah RT
 @endsection
 
 @section('content')
 <div class="datatables" style="padding: 25px">
     <div class="card">
         <div class="px-4 py-3 border-bottom">
-            <h4 class="card-title mb-0">Daftar Ketua RT</h4>
+            <h4 class="card-title mb-0">Daftar Wilayah RT</h4>
         </div>
         <div class="card-body">
             <a href="/rw_leader/area_scope/create" class="btn btn-primary mb-3">+ Tambah Wilayah RT</a>

@@ -20,11 +20,11 @@ class SubmissionFundController extends Controller
         $status = $request->pyn_status_submission;
 
     // Query data pembayaran metode bank sampah milik user login
-        $query = payments::whereYear('pyn_created_at', $year)
+        $query = payments::whereYear('created_at', $year)
             ->where('metode_bayar', 'bank_sampah');
 
     if (!empty($month)) {
-        $query->whereMonth('pyn_created_at', $month);
+        $query->whereMonth('created_at', $month);
     }
     if (!empty($scopeId)) {
         $query->whereHas('user', function ($q) use ($scopeId) {
@@ -62,8 +62,8 @@ class SubmissionFundController extends Controller
 
     $query = payments::with(['user.areaScope'])
         ->where('metode_bayar', 'bank_sampah')
-        ->whereYear('pyn_created_at', $year)
-        ->whereMonth('pyn_created_at', $month);
+        ->whereYear('created_at', $year)
+        ->whereMonth('created_at', $month);
 
     if ($request->filled('usr_scope_id')) {
         $query->whereHas('user', function ($q) use ($request) {
@@ -136,11 +136,11 @@ class SubmissionFundController extends Controller
         }
     
         if ($request->filled('year')) {
-            $query->whereYear('pyn_created_at', $request->year);
+            $query->whereYear('created_at', $request->year);
         }
     
         if ($request->filled('month')) {
-            $query->whereMonth('pyn_created_at', $request->month);
+            $query->whereMonth('created_at', $request->month);
         }
     
         if (!empty($request->usr_scope_id)) {

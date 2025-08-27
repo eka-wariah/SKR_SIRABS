@@ -13,12 +13,7 @@
             {{-- Avatar dan Nama --}}
             <div class="user-avatar-section">
               <div class="d-flex align-items-center flex-column">
-                <img
-                  class="img-fluid rounded mb-4"
-                  src="{{ asset('vuexy/assets/img/avatars/1.png') }}"
-                  height="120"
-                  width="120"
-                  alt="User avatar" />
+                <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('vuexy/assets/img/avatars/16.jpg') }}" class="rounded-circle object-fit-cover" alt="user1" width="60" height="60"/>
                 <div class="user-info text-center">
                   <h5>{{ $treasurer->name }}</h5>
                   <span class="badge bg-label-secondary">Bendahara</span>
@@ -39,11 +34,12 @@
               </ul>
               
               {{-- Tombol Aksi --}}
-              <div class="d-flex justify-content-center">
-                <a href="javascript:;" class="btn btn-label-danger suspend-user">
-                    Jadikan Warga
-                </a>
-              </div>
+              <button type="button"
+              class="btn btn-danger delete-btn"
+              data-id="{{ $treasurer->treasurer->trs_id }}"
+              data-name="{{ $treasurer->name }}">
+              Jadikan Warga
+          </button>
             </div>
       
           </div>

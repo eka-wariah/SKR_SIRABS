@@ -16,4 +16,9 @@ class area_scope extends Model
     const CREATED_AT = 'asc_created_at';
     const UPDATED_AT = 'asc_updated_at';
     const DELETED_AT = 'asc_deleted_at';
+
+    public function getScopeNameAttribute()
+{
+    return strtoupper($this->asc_level . ' ' . $this->asc_number); // contoh: RT 4
+}
 }

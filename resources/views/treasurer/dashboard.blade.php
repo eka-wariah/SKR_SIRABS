@@ -1,92 +1,132 @@
 @extends('treasurer.master_treasurer')
 
-@push('link')
-    <link rel="stylesheet" href="{{ asset('vuexy/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-@endpush
-
 @section('content')
 <div class="body-wrapper mt-4">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-8 d-flex align-items-stretch">
-          <div class="card w-100 bg-primary-subtle overflow-hidden shadow-none">
-            <div class="card-body position-relative">
-              <div class="row">
-                <div class="col-sm-7">
-                  <div class="d-flex align-items-center mb-7">
-                    <div class="rounded-circle overflow-hidden me-6">
-                      <img src="{{ asset('modernize\assets\images\profile\user-1.jpg')}}" alt="modernize-img" width="40" height="40')}}">
-                    </div>
-                    <h5 class="fw-semibold mb-0 fs-5">Welcome back {{ auth()->user()->name }}!</h5>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <div class="border-end pe-4 border-muted border-opacity-10">
-                      <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">$2,340<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i>
-                      </h3>
-                      <p class="mb-0 text-dark">Today’s Sales</p>
-                    </div>
-                    <div class="ps-4">
-                      <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">35%<i class="ti ti-arrow-up-right fs-5 lh-base text-success"></i>
-                      </h3>
-                      <p class="mb-0 text-dark">Overall Performance</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="welcome-bg-img mb-n7 text-end">
-                      <img src="{{ asset('modernize\assets\images\backgrounds\welcome-bg.svg')}}" alt="modernize-img" class="img-fluid">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <br>
+
+    <div class="d-flex align-items-center gap-4 mb-4">
+        <div class="position-relative">
+          <div class="border border-2 border-primary rounded-circle">
+            <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('vuexy/assets/img/avatars/16.jpg') }}" class="rounded-circle object-fit-cover" alt="user1" width="60" height="60"/>
           </div>
-              </div>
-            </div>
-          </div>
- 
-    
-{{-- <div class="col-xl-7">
-  <div class="card" style="width: 100%; height: 250px;">
-      <div class="d-flex align-items-end row">
-          <div class="col-7">
-              <div class="card-body text-nowrap">
-                  <h5 class="card-title mb-0">Selamat Datang<span class="h4"> {{ Auth::user()->name }}  👋🏻</span></h5>
-                  <br>
-                  <p class="mb-2">Terima kasih telah aktif memantau kegiatan dan pelayanan warga di lingkungan Anda.</p>
-                  <p class="mb-2">Mari bersama wujudkan lingkungan yang bersih, sehat, dan tertib.</p>
-                  <h4 class="text-primary mb-1">$48.9k</h4>
-                  <a href="javascript:;" class="btn btn-primary">View Sales</a>
-              </div>
-          </div>
-          <div class="col-5 text-center text-sm-left">
-              <div class="card-body pb-0 px-0 px-md-4">
-                  <img
-                      src="{{asset ('vuexy/assets/img/illustrations/card-advance-sale.png')}}"
-                      height="140"
-                      alt="view sales" />
-              </div>
-          </div>
+        </div>
+        <div>
+            @php
+            $user = auth()->user();
+            $role = $user->getRoleNames()->first(); // misalnya "rt_leader"
+            $rtNumber = $user->areaScope->asc_number ?? '-';
+        
+            // Ubah role menjadi label
+            $jabatan = match ($role) {
+                'rt_leader' => "Ketua RT $rtNumber",
+                'treasurer' => "Bendahara RT $rtNumber",
+                'citizen' => "Warga RT $rtNumber",
+                default => "RT $rtNumber"
+            };
+        @endphp
+            <h3 class="fw-semibold mb-1">
+                Selamat Datang {{ trim((auth()->user()->first_name ?? '') . ' ' . (auth()->user()->last_name ?? '')) }}!
+            </h3>
+            
+          @php
+            \Carbon\Carbon::setLocale('id');
+            $tanggal = \Carbon\Carbon::now();
+          @endphp
+          <span>{{ $jabatan }}, Semangat beraktivitas dan jangan lupa membayar retribusi - {{ $tanggal->translatedFormat('d F Y') }}</span>
+        </div>
       </div>
-  </div>
-</div> --}}
 
-        @endsection
+      <br>
+
+    <div class="row">
+        <div class="col-md-3"><x-stat-box title="Total Pemasukan" value="Rp{{ number_format($totalPemasukan,0,',','.') }}" bg="success"/></div>
+        <div class="col-md-3"><x-stat-box title="Total Pengeluaran" value="Rp{{ number_format($totalPengeluaran,0,',','.') }}" bg="danger"/></div>
+        <div class="col-md-3"><x-stat-box title="Potongan Bendahara (10%)" value="Rp{{ number_format($potonganBendahara,0,',','.') }}" bg="warning"/></div>
+        <div class="col-md-3"><x-stat-box title="Saldo Akhir" value="Rp{{ number_format($saldoAkhir,0,',','.') }}" bg="primary"/></div>
+    </div>
+
+    {{-- Grafik Pemasukan & Pengeluaran --}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5>Grafik Pemasukan & Pengeluaran Bulanan</h5>
+            <canvas id="financeChart"></canvas>
+        </div>
+    </div>
+
+    {{-- Transaksi Terbaru --}}
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3">Transaksi Masuk Terbaru</h6>
+                    <ul class="list-group">
+                        @foreach ($transaksiMasuk as $item)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ $item->created_at->format('d M Y') }}</span>
+                                <strong>Rp{{ number_format($item->jumlah_bayar, 0, ',', '.') }}</strong>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3">Transaksi Keluar Terbaru</h6>
+                    <ul class="list-group">
+                        @foreach ($transaksiKeluar as $item)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ $item->created_at->format('d M Y') }}</span>
+                                <strong>Rp{{ number_format($item->jumlah_bayar, 0, ',', '.') }}</strong>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
 @push('script')
-    <script src="{{ asset('vuexy\assets\js\tables-datatables-advanced.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="{{ asset('modernize/assets/js/dashboards/dashboard2.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {!! json_encode($bulanLabels) !!};
+    const dataMasuk = {!! json_encode($pemasukanBulanan) !!};
+    const dataKeluar = {!! json_encode($pengeluaranBulanan) !!};
 
-    <script src="{{ asset('vuexy\assets/js/datatable/datatable-advanced.init.js') }}"></script>
-    <script>
-        function handleColorTheme(e) {
-          document.documentElement.setAttribute("data-color-theme", e);
+    new Chart(document.getElementById('financeChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Pemasukan',
+                    data: dataMasuk,
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: dataKeluar,
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
         }
-      </script>
+    });
+</script>
 @endpush

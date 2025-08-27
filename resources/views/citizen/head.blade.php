@@ -43,6 +43,7 @@
     <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}" />
     <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')}}" />
     <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/fonts/flag-icons.css')}}" />
+    <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/fonts/iconify-icons.css')}}" />
 
     <!-- Page CSS -->
     <link rel="stylesheet" href="{{ asset('vuexy/assets/vendor/css/pages/cards-advance.css')}}" />

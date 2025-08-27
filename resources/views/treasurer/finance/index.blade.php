@@ -1,283 +1,206 @@
-@extends('treasurer.master_treasurer') {{-- Ganti sesuai layout kamu --}}
+@extends('treasurer.master_treasurer')
+
+@push('link')
+<link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css') }}">
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+@endpush
+
+@section('title', 'SITAW | Laporan Penyerahan Dana')
 
 @section('content')
-<div class="container mt-4">
-    <h4 class="mb-3">Catatan Keuangan Bendahara</h4>
+<div class="datatables" style="padding: 25px">
+    {{-- Filter Tahun --}}
+    <ul class="nav nav-tabs" id="yearTabs">
+        @foreach ([2025, 2024, 2023] as $tahun)
+            <li class="nav-item">
+                <button class="nav-link year-tab {{ $selectedYear == $tahun ? 'active' : '' }}" data-year="{{ $tahun }}">{{ $tahun }}</button>
+            </li>
+        @endforeach
+    </ul>
 
-    {{-- Tombol Tambah --}}
-    <div class="d-flex gap-2 mb-4">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahPemasukan">
-            + Tambah Pemasukan
-        </button>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTambahPengeluaran">
-            + Tambah Pengeluaran
-        </button>
-    </div>
-
-    {{-- Tabel --}}
-    <div class="card">
-        <div class="card-body table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Keterangan</th>
-                        <th>Tipe</th>
-                        <th>Kategori</th>
-                        <th>Nominal</th>
-                        <th>Metode</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($payments as $item)
-                        <tr>
-                            <td>{{ $item->created_at->format('d M Y') }}</td>
-                            <td>
-                                @if($item->tipe === 'Pemasukan')
-                                    Pembayaran {{ $item->paymentCategory->pym_name ?? '-' }}
-                                @else
-                                    Pengeluaran untuk {{ ucfirst($item->pyn_sys_note) }}
-                                @endif
-                            </td>
-                            <td>
-                                <span class="badge bg-{{ $item->tipe == 'Pemasukan' ? 'success' : 'danger' }}">
-                                    {{ $item->tipe }}
-                                </span>
-                            </td>
-                            <td>{{ $item->kategori }}</td>
-                            <td>Rp {{ number_format($item->jumlah_bayar, 0, ',', '.') }}</td>
-                            <td>{{ ucfirst($item->metode_bayar) }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Belum ada data</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- Ringkasan --}}
+    {{-- Filter Bulan --}}
     @php
-        $totalMasuk = $payments->where('tipe', 'Pemasukan')->sum('jumlah_bayar');
-        $totalKeluar = $payments->where('tipe', 'Pengeluaran')->sum('jumlah_bayar');
-        $saldoAkhir = $totalMasuk - $totalKeluar;
+        $bulanList = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
     @endphp
 
-    <div class="mt-4">
-        <div class="alert alert-info">
-            <strong>Total Pemasukan:</strong> Rp {{ number_format($totalMasuk, 0, ',', '.') }} <br>
-            <strong>Total Pengeluaran:</strong> Rp {{ number_format($totalKeluar, 0, ',', '.') }} <br>
-            <strong>Saldo Akhir:</strong> Rp {{ number_format($saldoAkhir, 0, ',', '.') }}
+    <div class="mt-3 d-flex flex-wrap gap-2" id="monthButtons">
+        @foreach ($bulanList as $no => $namaBulan)
+            <button class="btn btn-sm month-btn {{ $selectedMonth == $no ? 'btn-primary' : 'btn-outline-primary' }}" data-month="{{ $no }}">{{ $namaBulan }}</button>
+        @endforeach
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h4 class="card-title mb-0">Daftar Kategori</h4>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" onclick="window.location.href='/treasurer/finance/payment/create'">+ Tambah Pemasukan</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalTambahPengeluaran">+ Tambah Pengeluaran</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="financeTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th>Pemasukan</th>
+                            <th>Pengeluaran</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot class="fw-bold">
+                        <tr>
+                            <td colspan="3" class="text-end">Total</td>
+                            <td class="text-end" id="totalPemasukan">Rp0</td>
+                            <td class="text-end" id="totalPengeluaran">Rp0</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end">Saldo Akhir</td>
+                            <td colspan="2" class="text-end" id="saldoAkhir">Rp0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-
-{{-- MODAL TAMBAH PEMASUKAN --}}
-<div class="modal fade" id="modalTambahPemasukan" tabindex="-1" aria-labelledby="modalTambahPemasukanLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('treasurer.finance.payment.store') }}">
-        @csrf
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Pemasukan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="household_id" class="form-label">KK / Rumah Tangga</label>
-                    <select name="household_id" class="form-select" required>
-                        @foreach($households as $householdId)
-                            <option value="{{ $householdId }}">ID KK: {{ $householdId }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="pyn_payment_category_id" class="form-label">Kategori Pembayaran</label>
-                    <select name="pyn_payment_category_id" class="form-select" required>
-                        @foreach($paymentCategories as $category)
-                            <option value="{{ $category->pym_id }}">{{ $category->pym_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="jumlah_bayar" class="form-label">Jumlah Bayar</label>
-                    <input type="number" name="jumlah_bayar" class="form-control" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success" type="submit">Simpan</button>
-            </div>
-        </div>
-    </form>
-  </div>
-</div>
-
 {{-- MODAL TAMBAH PENGELUARAN --}}
-<div class="modal fade" id="modalTambahPengeluaran" tabindex="-1" aria-labelledby="modalTambahPengeluaranLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" action="{{ route('treasurer.finance.expense.store') }}">
-        @csrf
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Pengeluaran</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="jumlah_bayar" class="form-label">Jumlah Pengeluaran</label>
-                    <input type="number" name="jumlah_bayar" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label for="keterangan" class="form-label">Kategori</label>
-                    <select name="keterangan" class="form-select" required>
-                        <option value="air">Air</option>
-                        <option value="sampah">Sampah</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" type="submit">Simpan</button>
-            </div>
-        </div>
-    </form>
+<div class="modal fade" id="modalTambahPengeluaran" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ route('treasurer.finance.expense.store') }}">
+          @csrf
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Tambah Pengeluaran</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="mb-3">
+                      <label for="deskripsi" class="form-label">Deskripsi Pengeluaran</label>
+                      <input type="text" name="deskripsi" class="form-control" placeholder="Contoh: Gaji petugas RT 4" required>
+                  </div>
+                  <div class="mb-3">
+                      <label>Jumlah Pengeluaran</label>
+                      <input type="number" name="jumlah_bayar" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                      <label>Kategori</label>
+                      <select name="keterangan" class="form-select" required>
+                          <option value="air">Air</option>
+                          <option value="sampah">Sampah</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button class="btn btn-danger">Simpan</button>
+              </div>
+          </div>
+      </form>
+    </div>
   </div>
+    </div>
+</div>
 </div>
 @endsection
 
+@push('script')
+<script src="{{ asset('modernize/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 
-{{-- @extends('treasurer.master_treasurer')
+<!-- Wajib: script tombol DataTables -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 
-@section('content')
-<div class="container-fluid mt-4">
-    <h4 class="mb-4 fw-bold">Keuangan Lingkup Wilayah</h4>
+<script>
+let selectedYear = {{ $selectedYear }};
+let selectedMonth = {{ $selectedMonth }};
+let table;
 
-    {{-- Ringkasan Keuangan 
-    <div class="row">
-        {{-- Air 
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Retribusi Air</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Total Pemasukan: <strong>Rp {{ number_format($airTotal, 0, ',', '.') }}</strong></li>
-                        <li class="list-group-item">Potongan Bendahara (10%): Rp {{ number_format($airPotongan, 0, ',', '.') }}</li>
-                        <li class="list-group-item">Pengeluaran Air: Rp {{ number_format($airPengeluaran, 0, ',', '.') }}</li>
-                        <li class="list-group-item">Saldo Akhir Air: <strong class="text-success">Rp {{ number_format($airSaldo, 0, ',', '.') }}</strong></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+$(document).ready(function () {
+    table = $('#financeTable').DataTable({
+        dom: "<'row mb-2 align-items-center'<'col-md-6 d-flex gap-2'B><'col-md-6 text-end'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+        buttons: [
+            {
+                text: '<i class="bi bi-download"></i> Download PDF Arus Kas',
+                className: 'btn btn-primary',
+                action: function () {
+                    const url = `{{ route('treasurer.finance.cashflow.download', ['year' => '__YEAR__', 'month' => '__MONTH__']) }}`;
+                    window.location.href = url
+                        .replace('__YEAR__', selectedYear)
+                        .replace('__MONTH__', selectedMonth);
+                }
+            }
+        ],
+        ajax: {
+            url: '{{ route("treasurer.finance.data") }}',
+            data: function (d) {
+                d.year = selectedYear;
+                d.month = selectedMonth;
+            },
+            dataSrc: function (json) {
+                $('#totalPemasukan').text('Rp' + json.total_masuk.toLocaleString('id-ID'));
+                $('#totalPengeluaran').text('Rp' + json.total_keluar.toLocaleString('id-ID'));
+                $('#saldoAkhir').text('Rp' + json.saldo_akhir.toLocaleString('id-ID'));
+                return json.data;
+            }
+        },
+        columns: [
+            { data: null, render: (d, t, r, m) => m.row + 1 },
+            { data: 'tanggal' },
+            { data: 'keterangan' },
+            { data: 'pemasukan', className: 'text-end' },
+            { data: 'pengeluaran', className: 'text-end' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return row.pengeluaran
+                        ? `<button class="btn btn-sm btn-warning btn-edit" data-id="${data.id}" data-deskripsi="${data.keterangan}" data-jumlah="${data.raw_jumlah}" data-kategori="${data.kategori}">Edit</button>`
+                        : '';
+                },
+                orderable: false
+            }
+        ]
+    });
 
-        {{-- Sampah 
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Retribusi Sampah</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Total Pemasukan: <strong>Rp {{ number_format($sampahTotal, 0, ',', '.') }}</strong></li>
-                        <li class="list-group-item">Pengeluaran Sampah: Rp {{ number_format($sampahPengeluaran, 0, ',', '.') }}</li>
-                        <li class="list-group-item">Saldo Akhir Sampah: <strong class="text-success">Rp {{ number_format($sampahSaldo, 0, ',', '.') }}</strong></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    // Filter Tahun
+    $(document).on('click', '.year-tab', function () {
+        selectedYear = $(this).data('year');
+        $('.year-tab').removeClass('active');
+        $(this).addClass('active');
+        table.ajax.reload();
+    });
 
-    {{-- Tambah Pembayaran Manual 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">Tambah Pembayaran Warga (Offline)</div>
-        <div class="card-body">
-            <form action="{{ route('treasurer.finance.payment.store') }}" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label>Household</label>
-                        <select name="household_id" class="form-select" required>
-                            <option value="">-- Pilih Household --</option>
-                            @foreach($households as $id)
-                                <option value="{{ $id }}">{{ $id }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label>Jenis Pembayaran</label>
-                        <select name="pyn_payment_category_id" class="form-select" required>
-                            <option value="">-- Pilih Kategori --</option>
-                            @foreach($paymentCategories as $cat)
-                                <option value="{{ $cat->pym_id }}">{{ $cat->pym_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label>Jumlah Bayar</label>
-                        <input type="number" name="jumlah_bayar" class="form-control" required>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button class="btn btn-success">Simpan Pembayaran</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    // Filter Bulan
+    $(document).on('click', '.month-btn', function () {
+        selectedMonth = $(this).data('month');
+        $('.month-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+        $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+        table.ajax.reload();
+    });
 
-    {{-- Tambah Pengeluaran 
-    <div class="card mb-4">
-        <div class="card-header bg-danger text-white">Tambah Pengeluaran</div>
-        <div class="card-body">
-            <form action="{{ route('treasurer.finance.expense.store') }}" method="POST">
-                @csrf
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label>Jumlah Pengeluaran</label>
-                        <input type="number" name="jumlah_bayar" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Keterangan (air/sampah)</label>
-                        <select name="keterangan" class="form-select" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="air">Perbaikan Air</option>
-                            <option value="sampah">Gaji Petugas Sampah</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button class="btn btn-warning">Simpan Pengeluaran</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Daftar Pembayaran 
-    <div class="card mb-4">
-        <div class="card-header bg-light fw-bold">Daftar Pembayaran Warga</div>
-        <div class="card-body">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Periode</th>
-                        <th>Household</th>
-                        <th>Kategori</th>
-                        <th>Jumlah</th>
-                        <th>Status</th>
-                        <th>Metode</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($payments as $pay)
-                        <tr>
-                            <td>{{ $pay->pyn_periode }}</td>
-                            <td>{{ $pay->pyn_household_id }}</td>
-                            <td>{{ $pay->paymentCategory->pym_name ?? '-' }}</td>
-                            <td>Rp {{ number_format($pay->jumlah_bayar, 0, ',', '.') }}</td>
-                            <td>{{ ucfirst($pay->status) }}</td>
-                            <td>{{ ucfirst($pay->metode_bayar) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-@endsection --}}
+    // Edit Pengeluaran
+    $(document).on('click', '.btn-edit', function () {
+        $('#edit_id').val($(this).data('id'));
+        $('#edit_deskripsi').val($(this).data('deskripsi'));
+        $('#edit_jumlah').val($(this).data('jumlah'));
+        $('#edit_keterangan').val($(this).data('kategori'));
+        $('#formEditPengeluaran').attr('action', `/treasurer/finance/expense/${$(this).data('id')}`);
+        $('#modalEditPengeluaran').modal('show');
+        
+    });
+});
+</script>
+@endpush

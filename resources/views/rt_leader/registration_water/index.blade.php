@@ -11,8 +11,10 @@
 @endsection
 
 @section('content')
-<div class="container mt-4">
-    <h4 class="mb-3">Daftar Pengajuan Layanan Air SIBEL</h4>
+<div class="datatables" style="padding: 25px">
+    <div class="card">
+        <div class="card-body">
+    <h4 class="mb-3">Daftar Pengajuan Layanan Air Bersama</h4>
   
     <table class="table table-bordered table-striped">
       <thead>

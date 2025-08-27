@@ -1,99 +1,72 @@
 @extends('treasurer.master_treasurer')
 
 @push('link')
-<link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css')}}" />
-    <link rel="stylesheet" href="{{ asset('modernize/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css') }}">
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 @endpush
 
 @section('title', 'SITAW | Laporan Penyerahan Dana')
 
 @section('content')
 <div class="datatables" style="padding: 25px">
- 
-         {{-- KANAN: Search Box --}}
-<div class="d-flex align-items-end">
-<div id="searchBoxWrapper"></div>
-</div>
 
+    {{-- Tabs Tahun --}}
+    <ul class="nav nav-tabs" id="yearTabs">
+        @foreach ([2025, 2024, 2023] as $tahun)
+            <li class="nav-item">
+                <button class="nav-link year-tab {{ request('year', date('Y')) == $tahun ? 'active' : '' }}"
+                    data-year="{{ $tahun }}">{{ $tahun }}</button>
+            </li>
+        @endforeach
+    </ul>
 
+    {{-- Tombol Bulan --}}
+    @php
+        $bulanList = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+        $selectedYear = request('year', date('Y'));
+        $selectedMonth = request('month', date('n'));
+        $selectedScope = request('usr_scope_id');
+        $selectedStatus = request('pyn_status_submission');
+    @endphp
 
+    <div class="mt-3 d-flex flex-wrap gap-2" id="monthButtons">
+        @foreach ($bulanList as $no => $namaBulan)
+            <button class="btn btn-sm month-btn {{ $selectedMonth == $no ? 'btn-primary' : 'btn-outline-primary' }}"
+                data-month="{{ $no }}">{{ $namaBulan }}</button>
+        @endforeach
+    </div>
 
-{{-- Wrapper Tombol Export --}}
-<div class="d-flex justify-content-end mb-2">
-<div id="customButtonWrapper"></div>
-</div>
-
-{{-- Tabel --}}
-
-
-    {{-- Filter --}}
-    {{-- <div class="d-flex flex-wrap gap-3 mb-4">
-        <select id="filterYear" class="form-select w-auto">
-            @foreach ([2025, 2024, 2023] as $tahun)
-                <option value="{{ $tahun }}" {{ request('year', date('Y')) == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
-            @endforeach
-        </select>
-
-        <select id="filterMonth" class="form-select w-auto">
-            @foreach ([1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'] as $num => $bulan)
-                <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>{{ $bulan }}</option>
-            @endforeach
-        </select>
-
-        <select id="filterScope" class="form-select w-auto">
+    {{-- Dropdown Filter --}}
+    <div class="mt-3 d-flex flex-wrap align-items-center gap-3">
+        <select id="filterScope" class="form-select btn-sm border-primary" style="width: auto">
             <option value="">Semua RT</option>
             @foreach ($areaScope as $area)
-                <option value="{{ $area->asc_id }}">{{ $area->asc_level }} {{ $area->asc_number }}</option>
+                <option value="{{ $area->asc_id }}" {{ $selectedScope == $area->asc_id ? 'selected' : '' }}>
+                    {{ $area->asc_level }} {{ $area->asc_number }}
+                </option>
             @endforeach
         </select>
-    <select id="filterStatus" class="form-select w-auto">
-        <option value="">Semua Status</option>
-    <option value="Belum Diserahkan" {{ $status == 'Belum Diserahkan' ? 'selected' : '' }}>Belum Diserahkan</option>
-    <option value="Menunggu Konfirmasi" {{ $status == 'Menunggu Konfirmasi' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
-    <option value="Sudah Dikonfirmasi" {{ $status == 'Sudah Dikonfirmasi' ? 'selected' : '' }}>Sudah Dikonfirmasi</option>
-    </select>
-    </div> --}}
 
-    {{-- Wrapper Tombol Export --}}
-  
+        <select id="filterStatus" class="form-select btn-sm border-primary" style="width: auto">
+            <option value="">Semua Status</option>
+            <option value="Menunggu Konfirmasi" {{ $selectedStatus == 'Menunggu Konfirmasi' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
+            <option value="Sudah Dikonfirmasi" {{ $selectedStatus == 'Sudah Dikonfirmasi' ? 'selected' : '' }}>Sudah Dikonfirmasi</option>
+        </select>
+    </div>
 
     {{-- Tabel --}}
-    <div class="card">
+    <div class="card mt-4">
         <div class="card-body">
-            <div>
-                <h4 class="card-title mb-0">Daftar Kategori</h4>
-                <br>
-                <div class="d-flex flex-wrap gap-3 mb-3">
-                    <select id="filterYear" class="form-select w-auto">
-                        @foreach ([2025, 2024, 2023] as $tahun)
-                            <option value="{{ $tahun }}" {{ request('year', date('Y')) == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
-                        @endforeach
-                    </select>
-            
-                    <select id="filterMonth" class="form-select w-auto">
-                        @foreach ([1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu', 9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'] as $num => $bulan)
-                            <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>{{ $bulan }}</option>
-                        @endforeach
-                    </select>
-            
-                    <select id="filterScope" class="form-select w-auto">
-                        <option value="">Semua RT</option>
-                        @foreach ($areaScope as $area)
-                            <option value="{{ $area->asc_id }}">{{ $area->asc_level }} {{ $area->asc_number }}</option>
-                        @endforeach
-                    </select>
-                <select id="filterStatus" class="form-select w-auto">
-                    <option value="">Semua Status</option>
-                <option value="Menunggu Konfirmasi" {{ $status == 'Menunggu Konfirmasi' ? 'selected' : '' }}>Menunggu Konfirmasi</option>
-                <option value="Sudah Dikonfirmasi" {{ $status == 'Sudah Dikonfirmasi' ? 'selected' : '' }}>Sudah Dikonfirmasi</option>
-                </select>
-                </div>
-            </div>
+            <h4 class="card-title mb-3">Daftar Kategori</h4>
+            <div id="customButtonWrapper" class="d-flex justify-content-end mb-2"></div>
 
             <div class="table-responsive">
                 <table id="file_export" class="table table-bordered table-striped text-nowrap">
-                    
                     <thead>
                         <tr>
                             <th>No</th>
@@ -105,20 +78,15 @@
                     </thead>
                     <tbody></tbody>
                     <tfoot>
-                        <!-- start row -->
-                        
-
                         <tr>
                             <th></th>
                             <th>Total Keseluruhan</th>
-                            <th id="totalDiserahkan">Rp 0</th> <!-- ini yang nanti diganti dari JS -->
+                            <th id="totalDiserahkan">Rp 0</th>
                             <th></th>
                             <th></th>
                         </tr>
-                        <!-- end row -->
                     </tfoot>
                 </table>
-            
             </div>
         </div>
     </div>
@@ -126,7 +94,6 @@
 @endsection
 
 @push('script')
-<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 <script src="{{ asset('modernize/assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -136,201 +103,119 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    let table;
+    let selectedYear = @json($selectedYear);
+    let selectedMonth = @json($selectedMonth);
 
-    {{-- <script>
-        let table;
-        
-
-        $(document).ready(function () {
-            table = $("#file_export").DataTable({
-  dom: '<"d-flex justify-content-start gap-2 mb-3"B>frtip',
-  buttons: [
-    {
-      extend: 'copy',
-      text: 'Copy',
-      className: 'btn btn-primary'
-    },
-    {
-      extend: 'csv',
-      text: 'CSV',
-      className: 'btn btn-primary'
-    },
-    {
-      extend: 'excel',
-      text: 'Excel',
-      className: 'btn btn-primary'
-    },
-    {
-      extend: 'pdf',
-      text: 'PDF',
-      className: 'btn btn-primary'
-    },
-    {
-      extend: 'print',
-      text: 'Print',
-      className: 'btn btn-primary',
-      title: 'Laporan Penyerahan Dana',
-      footer: true
-    },
-  ],
-                ajax: {
-                    url: "{{ route('submission.data') }}", // pastikan route ini ada
-                    data: function (d) {
-                        d.year = $('#filterYear').val();
-                        d.month = $('#filterMonth').val();
-                        d.usr_scope_id = $('#filterScope').val();
-                        d.pyn_status_submission = $('#filterStatus').val();
-                        console.log(d);
-                    },
-                    dataSrc: 'data'
-                },
-                columns: [
-                    { data: 'index' },
-                    { data: 'nama' },
-                    { data: 'jumlah' },
-                    { data: 'status' },
-                    { data: 'aksi' }
-                ],
-                columnDefs: [
-                    { targets: [3, 4], orderable: false, searchable: false }
-                ]
-            });
-
-            // Pindahkan tombol export ke wrapper custom
-            table.buttons().container().appendTo('#customButtonWrapper');
-
-            // Reload saat filter berubah
-            $('#filterYear, #filterMonth, #filterScope, #filterStatus').on('change', function () {
-                table.ajax.reload();
-            });
-        });
-    </script> --}}
-    <script>
-        let table;
-        $(document).ready(function () {
-            table = $("#file_export").DataTable({
-                dom: '<"d-flex justify-content-start gap-2 mb-3"B>frtip',
-                buttons: [
-                    { extend: 'copy', text: 'Copy', className: 'btn btn-primary' },
-                    { extend: 'csv', text: 'CSV', className: 'btn btn-primary' },
-                    { extend: 'excel', text: 'Excel', className: 'btn btn-primary' },
-                    { extend: 'pdf', text: 'PDF', className: 'btn btn-primary' },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        className: 'btn btn-primary',
-                        title: 'Laporan Penyerahan Dana',
-                        customize: function (win) {
-                            const footer = $('#file_export tfoot').html();
-                            $(win.document.body).find('table').append(`<tfoot>${footer}</tfoot>`);
-                        }
-                    }
-                ],
-                ajax: {
-                    url: "{{ route('confirm_submission.getDataConfirm') }}",
-                    data: function (d) {
-                        d.year = $('#filterYear').val();
-                        d.month = $('#filterMonth').val();
-                        d.usr_scope_id = $('#filterScope').val();
-                        d.pyn_status_submission = $('#filterStatus').val();
-                    },
-                    dataSrc: 'data'
-                },
-                columns: [
-                    { data: 'index' },
-                    { data: 'nama' },
-                    { data: 'jumlah' },
-                    { data: 'status' },
-                    { data: 'aksi' }
-                ],
-                columnDefs: [
-                    { targets: [3, 4], orderable: false, searchable: false }
-                ]
-            });
-    
-            table.buttons().container().appendTo('#customButtonWrapper');
-    
-            $('#filterYear, #filterMonth, #filterScope, #filterStatus').on('change', function () {
-                table.ajax.reload();
-                updateTotalDiserahkan();
-            });
-    
-            // Load total pertama kali
+    $(document).ready(function () {
+        function updateTable() {
+            table.ajax.reload();
             updateTotalDiserahkan();
-    
-            // Handler tombol "Tandai Diserahkan"
-            $(document).on('click', '.btn-tandai-disahkan', function (e) {
-                e.preventDefault();
-                let id = $(this).data('id');
-    
-                $.ajax({
-                    url: '/submission/tandai/' + id,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (res) {
-                        table.ajax.reload();
-                        updateTotalDiserahkan();
-                        // Bisa ditambah notifikasi sukses di sini
-                    }
-                });
-            });
-        });
-    $(document).on('click', '.btn-konfirmasi', function (e) {
-    e.preventDefault();
-    const id = $(this).data('id');
-
-    $.ajax({
-        url: '/treasurer/confirm_submission/confirm/' + id,
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}'
-        },
-        success: function (res) {
-            // Reload tabel dan total
-            table.ajax.reload(null, false);
-            updateTotalDiserahkan();
-
-            // Notifikasi
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: res.message,
-                timer: 1500,
-                showConfirmButton: false
-            });
-        },
-        error: function () {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Gagal mengkonfirmasi!'
-            });
         }
-    });
+
+        table = $("#file_export").DataTable({
+    dom: "<'row mb-3'<'col-md-6'><'col-md-6 text-end'f>>" +
+         "<'row'<'col-sm-12'tr>>" +
+         "<'row mt-2'<'col-md-5'i><'col-md-7'p>>",
+    ajax: {
+        url: "{{ route('confirm_submission.getDataConfirm') }}",
+        data: function (d) {
+            d.year = selectedYear;
+            d.month = selectedMonth;
+            d.usr_scope_id = $('#filterScope').val();
+            d.pyn_status_submission = $('#filterStatus').val();
+        },
+        dataSrc: 'data'
+    },
+    columns: [
+        { data: 'index' },
+        { data: 'nama' },
+        { data: 'jumlah' },
+        { data: 'status' },
+        { data: 'aksi' }
+    ],
+    columnDefs: [
+        { targets: [3, 4], orderable: false, searchable: false }
+    ]
 });
 
-function updateTotalDiserahkan() {
-    $.ajax({
-        url: '/treasurer/confirm_submission/total',
-        method: 'GET',
-        data: {
-            year: $('#filterYear').val(),
-            month: $('#filterMonth').val(),
-            usr_scope_id: $('#filterScope').val() || null,
-            pyn_status_submission: $('#filterStatus').val() || null
-        },
-        success: function (res) {
-            $('#totalDiserahkan').text(res.total_format);
-        },
-        error: function () {
-            $('#totalDiserahkan').text('gagal awokwowowk');
-        }
+
+
+        table.buttons().container().appendTo('#customButtonWrapper');
+        updateTotalDiserahkan();
+
+        // Tahun
+        $(document).on('click', '.year-tab', function () {
+            selectedYear = $(this).data('year');
+            $('.year-tab').removeClass('active');
+            $(this).addClass('active');
+            updateTable();
+        });
+
+        // Bulan
+        $(document).on('click', '.month-btn', function () {
+            selectedMonth = $(this).data('month');
+            $('.month-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+            $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+            updateTable();
+        });
+
+        // Filter Scope & Status
+        $('#filterScope, #filterStatus').on('change', function () {
+            updateTable();
+        });
+
+        // Konfirmasi
+        $(document).on('click', '.btn-konfirmasi', function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+
+            $.ajax({
+                url: '/treasurer/confirm_submission/confirm/' + id,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (res) {
+                    table.ajax.reload(null, false);
+                    updateTotalDiserahkan();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: res.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal mengkonfirmasi!'
+                    });
+                }
+            });
+        });
     });
-}
 
-
-    </script>
-    
+    function updateTotalDiserahkan() {
+        $.ajax({
+            url: '/treasurer/confirm_submission/total',
+            method: 'GET',
+            data: {
+                year: selectedYear,
+                month: selectedMonth,
+                usr_scope_id: $('#filterScope').val(),
+                pyn_status_submission: $('#filterStatus').val()
+            },
+            success: function (res) {
+                $('#totalDiserahkan').text(res.total_format);
+            },
+            error: function () {
+                $('#totalDiserahkan').text('Gagal ambil total');
+            }
+        });
+    }
+</script>
 @endpush

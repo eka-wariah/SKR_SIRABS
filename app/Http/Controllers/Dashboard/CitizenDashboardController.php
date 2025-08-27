@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\payments;
 use App\Models\registration_water;
 use App\Models\User;
 use App\Models\waste_bank_details;
@@ -25,8 +27,21 @@ class CitizenDashboardController extends Controller
         $ketuaRT = User::where('usr_scope_id', $user->usr_scope_id)
         ->whereHas('roles', fn ($q) => $q->where('name', 'rt_leader')) // jika pakai Spatie
         ->first();
+        $user = auth()->user();
 
-        return view('citizen.dashboard', compact('saldoBankSampah', 'airRegistration', 'ketuaRT', 'totalBeratSampah'));
+    $invoices = Invoice::with('paymentCategory')
+    ->where('household_id', $user->household_id)
+        ->where('status', 'pending')
+        ->orderBy('periode', 'desc')
+        ->get();
+        
+        $payments = payments::where('pyn_household_id', $user->household_id)
+        ->latest()
+        ->limit(5)
+        ->get();
+
+        // dd($invoices); 
+        return view('citizen.dashboard', compact('saldoBankSampah', 'airRegistration', 'ketuaRT', 'totalBeratSampah', 'payments', 'invoices'));
     }
 
     /**

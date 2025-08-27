@@ -69,7 +69,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="mb-5 position-relative">
-                    <h4 class="card-title mb-0">Daftar Kategori</h4>
+                    <h4 class="card-title mb-0">Daftar Penyetoran Sampah dari Warga</h4>
                     <a href="/wastebank_officer/waste_bank/create" class="btn btn-primary position-absolute top-0 end-0">Tambah Kategori</a>
                 </div>
                 <p class="card-subtitle mb-3">
@@ -82,6 +82,9 @@
                             <tr>
                                 <th width="10%">No</th>
                                 <th>Nama</th>
+                                <th>Tanggal penyetoran</th>
+                                <th>Kategori Sampah</th>
+                                <th>Berat</th>
                                 <th>Jumlah Uang</th>
                                 <th>Aksi</th>
                                 
@@ -95,13 +98,23 @@
                                 
                                 <td>{{$no+1}}</td>
                                 <td>{{ $waste_bank->user->name}}</td>
+                                <td>{{ $waste_bank->user->created_at->translatedFormat('d F Y H:i')}}</td>
+                                <td>
+                                    @foreach ($waste_bank->details as $detail)
+                                    {{ $detail->trashCategory->trc_name ?? 'Tidak ada' }}
+                                    @endforeach</td>
+                                <td>
+                                    @foreach ($waste_bank->details as $detail)
+            {{ $detail->berat }} kg
+        @endforeach
+                                </td>
                                 {{-- <td>{{ $waste_bank->trash_categories->trc_name}}</td> --}}
                                 {{-- <td>{{ $waste_bank->wtb_total_wate}}</td> --}}
                                 <td>Rp {{ number_format($waste_bank->wtb_total_money, 0, ',', '.') }}</td>
                                 <td>
                                      <a href="/wastebank_officer/waste_bank/{{$waste_bank->id}}/edit" class="btn btn-primary">Edit</a>
                                      <a href="/wastebank_officer/waste_bank/{{ $waste_bank->id}}/destroy" class="btn btn-danger" data-confirm-delete="true">Delete</a>
-                                     <a href="/wastebank_officer/waste_bank/{{ $waste_bank->id}}" class="btn btn-danger">Detail</a>
+                                     {{-- <a href="/wastebank_officer/waste_bank/{{ $waste_bank->id}}" class="btn btn-danger">Detail</a> --}}
 
                                 </td>
 
@@ -117,6 +130,9 @@
                             
 
                             <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th>Total Keseluruhan</th>
                                 <th>Rp {{ number_format($total_uang, 0, ',', '.') }}</th>

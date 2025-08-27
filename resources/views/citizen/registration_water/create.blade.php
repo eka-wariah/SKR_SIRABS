@@ -1,9 +1,21 @@
 @extends('citizen.master_citizen')
 
-@section('content')
-<div class="container mt-4">
-    <h4 class="mb-3">Pendaftaran Layanan Air SIBEL</h4>
+@push('link')
+    
+@endpush
 
+@section('title')
+    SiTAW | Tambah Kategori
+@endsection
+
+@section('content')
+<div class="container-fluid mt-4 px-4">
+  <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+          <div class="px-4 py-3 border-bottom">
+            <h4 class="card-title mb-0">Pendaftaran Layanan Air Bersama</h4>
+          </div>
     @if(session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
@@ -17,13 +29,14 @@
             @csrf
 
             {{-- Nama Pengaju --}}
-            <div class="mb-3">
+            <div class="card-body">
+              <div class="mb-4 row align-items-center">
                 <label class="form-label">Nama Pengaju</label>
                 <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
             </div>
 
           {{-- ALAMAT --}}
-<div class="mb-3">
+          <div class="mb-4 row align-items-center">
     <label class="form-label">Alamat</label>
   
     @if($defaultAddress)
@@ -39,20 +52,22 @@
   </div>
 
             {{-- Catatan --}}
-            <div class="mb-3">
+            <div class="mb-4 row align-items-center">
                 <label for="rgw_notes" class="form-label">Catatan Tambahan</label>
                 <textarea name="rgw_notes" id="rgw_notes" class="form-control" rows="3">{{ old('rgw_notes') }}</textarea>
             </div>
 
             {{-- Foto Rumah --}}
-            <div class="mb-3">
+            <div class="mb-4 row align-items-center">
                 <label for="rgw_house_photo" class="form-label">Foto Rumah (untuk pemasangan)</label>
                 <input type="file" name="rgw_house_photo" id="rgw_house_photo" class="form-control" accept="image/*">
             </div>
-
+            
             <button type="submit" class="btn btn-primary">Kirim Permohonan</button>
         </form>
     @endif
+</div>
+    </div>
 </div>
 @endsection
 

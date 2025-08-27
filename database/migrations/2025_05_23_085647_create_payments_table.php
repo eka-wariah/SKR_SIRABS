@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('pyn_status_submission', ['Belum Diserahkan', 'Menunggu Konfirmasi', 'Sudah Dikonfirmasi'])->default('Belum Diserahkan');
             $table->string('pyn_periode');
 
+        
             $table->timestamps(); // tetap gunakan created_at, updated_at
             $table->softDeletes(); // gunakan deleted_at
 

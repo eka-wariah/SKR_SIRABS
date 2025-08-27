@@ -80,45 +80,52 @@
                             <!-- start row -->
                             <tr>
                                 <th width="10%">No</th>
-                                <th>Nama</th>
+                                <th>Dibayar oleh:</th>
                                 <th>Kategori Pembayaran</th>
                                 <th>Jumlah</th>
                                 <th>Tanggal Pembayaran</th>
                                 <th>Metode</th>
                                 <th>Bendahara</th>
                                 <th>Status</th>
+                                <th>Bukti Pembayaran</th>
+
                                 
                             </tr>
                             <!-- end row -->
                         </thead>
                         <tbody>
                             <!-- start row -->
-                            @foreach ( $History as $no=> $History)
-                            <tr>
-                                
-                                <td>{{$no+1}}</td>
-                                <td>{{$History->user->name}}</td>
-                                <td>{{$History->paymentCategory->pym_name }}</td>
-                                <td>Rp {{ number_format($History->jumlah_bayar, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($History->pyn_created_at)->format('d-m-Y H:i') }}</td>
-                                <td>{{$History->metode_bayar}}</td>
-                                <td>{{$History->treasurer->name}}</td>
-                                <td>
-                                    <span class="badge 
-                                        @if($History->status == 'lunas') bg-success 
-                                        @elseif($History->status == 'pending') bg-warning 
-                                        @else bg-danger 
-                                        @endif">
-                                        {{ ucfirst($History->status) }}
-                                    </span>
-                                     {{-- <a href="/citizen/waste_bank/{{ $waste_bank->id}}" class="btn btn-danger">Detail</a> --}}
+                            @foreach ($History as $no => $item)
+<tr>
+    <td>{{ $no + 1 }}</td>
+    <td>{{ $item->paidBy->name ?? '-' }}</td> <!-- siapa yg bayar -->
+    <td>{{ $item->paymentCategory->pym_name ?? '-' }}</td>
+    <td>Rp {{ number_format($item->jumlah_bayar, 0, ',', '.') }}</td>
+    <td>{{ $item->created_at->format('d-m-Y H:i') }}</td>
+    <td>{{ $item->metode_bayar }}</td>
+    <td>{{ $item->treasurer->name ?? '-' }}</td>
+    <td>
+        <span class="badge 
+            @if($item->status == 'lunas') bg-success 
+            @elseif($item->status == 'pending') bg-warning 
+            @else bg-danger 
+            @endif">
+            {{ ucfirst($item->status) }}
+        </span>
+    </td>
+    <td>
+        @if ($item->status === 'lunas')
+            <a href="{{ route('payment.invoice', $item->pyn_id) }}" class="btn btn-sm btn-primary">
+                <iconify-icon icon="line-md:text-box-multiple-to-text-box-transition" class="menu-icon align-middle me-1" style="font-size: 1.2rem;"></iconify-icon> Kwitansi Pembayaran
+                
+            </a>
+        @else
+            <span class="text-muted">-</span>
+        @endif
+    </td>
+</tr>
+@endforeach
 
-                                </td>
-
-
-                                
-                            </tr>
-                            @endforeach
                             <!-- end row --> 
                             
                         </tbody>

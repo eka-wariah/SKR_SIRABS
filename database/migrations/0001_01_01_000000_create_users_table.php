@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('usr_id');
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('email')->unique();
             $table->string('nik')->unique();
             $table->foreignId('household_id')->nullable()->constrained()->onDelete('cascade');
@@ -31,6 +33,8 @@ return new class extends Migration
             $table->text('bio')->nullable();
             //$table->foreign('area_scope_id')->references('asc_id')->on('area_scopes');
             $table->unsignedBigInteger('total_money')->default(0); 
+            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status_air')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -30,4 +30,5 @@
     <!-- Page JS -->
     
     <script src="{{ asset ('vuexy/assets/js/dashboards-analytics.js')}}"></script>
+    
     @stack('script')

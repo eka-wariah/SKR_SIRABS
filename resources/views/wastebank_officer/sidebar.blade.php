@@ -3,33 +3,16 @@
       <a href="index.html" class="app-brand-link">
         <span class="app-brand-logo demo">
           <span class="text-primary">
-            <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
-                fill="currentColor" />
-              <path
-                opacity="0.06"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
-                fill="#161616" />
-              <path
-                opacity="0.06"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
-                fill="#161616" />
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
-                fill="currentColor" />
-            </svg>
+            <span class="app-brand-logo demo">
+              <span class="app-brand-logo demo">
+                <img src="{{ asset('vuexy/assets/img/illustrations/logo10.png') }}"
+                     alt="Logo SIRABAS"
+                     style="max-height: 50px; max-width: 50px; border-radius: 50%; object-fit: contain;">
+              </span>
+            </span>
           </span>
         </span>
-        <span class="app-brand-text demo menu-text fw-bold ms-3">SIRABS</span>
+        <span class="app-brand-text demo menu-text fw-bold ms-3">SIRABAS</span>
       </a>
   
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -48,55 +31,61 @@
           <div data-i18n="Dashboard">Dashboard</div>
         </a>
       </li>
-  
-      <!-- Apps & Pages -->
-      <li class="menu-header small">
-        <span class="menu-header-text" data-i18n="Data Bank Sampah">Kelola Data Bank Sampah</span>
-      </li>
-      <!-- e-commerce-app menu start -->
-      <li class="menu-item">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon icon-base ti tabler-address-book"></i>
-          <div data-i18n="Bank Sampah">Bank Sampah</div>
-        </a>
-        <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="/wastebank_officer/trash_category" class="menu-link">
-              <div data-i18n="Kategori Sampah">Kategori Sampah</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="/wastebank_officer/waste_bank" class="menu-link">
-              <div data-i18n="Kelola Data Bank Sampah">Kelola Data Bank Sampah</div>
-            </a>
-          </li>
-  
-        </ul>
-      </li>
-       <!-- Apps & Pages -->
+        <!-- Forms & Tables -->
        <li class="menu-header small">
-        <span class="menu-header-text" data-i18n="Data Laporan">Data Laporan</span>
+        <span class="menu-header-text" data-i18n="Data Bank Sampah">Data Bank Sampah</span>
       </li>
-      <!-- e-commerce-app menu start -->
       <li class="menu-item">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon icon-base ti tabler-file-description"></i>
-          <div data-i18n="Laporan">Laporan</div>
+        <a href="/wastebank_officer/trash_category" class="menu-link">
+          <iconify-icon icon="tabler:trash" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Kategori Sampah">Kategori Sampah</div>
         </a>
-        <ul class="menu-sub">
-          <li class="menu-item">
-            <a href="/wastebank_officer/submission" class="menu-link">
-              <div data-i18n="Laporan Penyerahan Dana Retribusi">Laporan Penyerahan Dana Retribusi</div>
-            </a>
-          </li>
-          <li class="menu-item">
-            <a href="/wastebank_officer/waste_bank" class="menu-link">
-              <div data-i18n="Laporan Bank Sampah">Laporan Bank Sampah</div>
-            </a>
-          </li>
-  
-        </ul>
       </li>
+
+      <li class="menu-item">
+        <a href="/wastebank_officer/waste_bank" class="menu-link">
+          <iconify-icon icon="tabler:clipboard-data" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Data penyetoran">Data penyetoran</div>
+        </a>
+      </li>
+
+      <li class="menu-header small">
+        <span class="menu-header-text" data-i18n="Pemasukan dan Penarikan">Pemasukan dan Penarikan</span>
+      </li>
+      <li class="menu-item">
+        <a href="/wastebank_officer/cashflow" class="menu-link">
+          <iconify-icon icon="tabler:file-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Pemasukan dan Pengeluaran">Pemasukan dan Pengeluaran </div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/wastebank_officer/withdraw" class="menu-link">
+          <iconify-icon icon="tabler:file-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Penarikan Saldo">Penarikan Saldo </div>
+        </a>
+      </li>
+    
       <!-- Forms & Tables -->
+      <li class="menu-header small">
+        <span class="menu-header-text" data-i18n="Penyerahan dana retribusi">Penyerahan dana retribusi</span>
+      </li>
+      <li class="menu-item">
+        <a href="/wastebank_officer/submission" class="menu-link">
+          <iconify-icon icon="tabler:file-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Data retribusi">Data retribusi </div>
+        </a>
+      </li>
+      
+         {{-- <!-- Forms & Tables -->
+         <li class="menu-header small">
+          <span class="menu-header-text" data-i18n="Laporan">Laporan</span>
+        </li>
+        <li class="menu-item">
+          <a href="/citizen/waste_bank/" class="menu-link">
+            <iconify-icon icon="tabler:pencil-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+            <div data-i18n="Laporan Bank Sampah">Laporan Bank Sampah</div>
+          </a>
+        </li> --}}
+
     </ul>
   </aside>

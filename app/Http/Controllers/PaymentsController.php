@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\payment_category;
 use App\Models\payments;
 use App\Models\treasurer;
@@ -63,6 +64,7 @@ class PaymentsController extends Controller
         $periode = now()->format('Y-m');
         $kategoriSudahDibayar = payments::where('pyn_household_id', $user->household_id)
             ->where('pyn_periode', $periode)
+            ->where('status', 'lunas')
             ->pluck('pyn_payment_category_id');
 
         $PaymentCategory = payment_category::query()
@@ -122,6 +124,24 @@ class PaymentsController extends Controller
             'pyn_periode' => now()->format('Y-m')
         ]);
 
+        $invoice = Invoice::where('household_id', $payment->pyn_household_id)
+        ->where('payment_category_id', $payment->pyn_payment_category_id)
+        ->where('periode', $payment->pyn_periode)
+        ->first();
+
+    if ($invoice) {
+        $total_bayar = payments::where('pyn_household_id', $invoice->household_id)
+            ->where('pyn_payment_category_id', $invoice->payment_category_id)
+            ->where('pyn_periode', $invoice->periode)
+            ->where('status', 'lunas') // hanya hitung pembayaran yang lunas
+            ->sum('jumlah_bayar');
+
+        if ($total_bayar >= $invoice->amount) {
+            $invoice->status = 'lunas';
+            $invoice->save();
+        }
+    }
+
         if ($request->metode_bayar === 'bank_sampah') {
             UserNotification::create([
                 'user_id' => $user->usr_id,
@@ -180,7 +200,7 @@ class PaymentsController extends Controller
 
     $params = [
         'transaction_details' => [
-            'order_id' => $payment->pyn_id . '-' . Str::uuid(), // pastikan unik
+            'order_id' => $payment->pyn_id . '-' . Str::uuid(), 
             'gross_amount' => $jumlah,
         ],
         'customer_details' => [
@@ -302,6 +322,8 @@ class PaymentsController extends Controller
 
     public function invoice($id)
     {
+        session(['invoice_back_url' => url()->previous()]);
+        
         $user = auth()->user();
         $payment = payments::with('paymentCategory', 'treasurer')
         ->where('pyn_paid_by', $user->usr_id)
@@ -310,18 +332,22 @@ class PaymentsController extends Controller
         return view('citizen.payment.invoice', compact('user', 'payment'));
     }
 
-    public function history(payments $payments)
-    {
-        $user = auth()->user();
+    public function history()
+{
+ 
 
-    // Ambil semua pembayaran user ini, urut terbaru
-        $History = payments::where('pyn_paid_by', $user->usr_id)
-            ->with('paymentCategory','treasurer') // jika ingin tampilkan nama kategori
-            ->orderBy('created_at', 'desc')
-            ->get();
-   
-        return view('citizen.payment.history', compact('History'));
-    }
+    $user = auth()->user();
+
+    // Ambil semua pembayaran yang termasuk kategori (bukan pengeluaran)
+    // berdasarkan household_id yang sama
+    $History = payments::where('pyn_household_id', $user->household_id)
+        ->whereNotNull('pyn_payment_category_id')
+        ->with(['paymentCategory', 'treasurer', 'paidBy']) // relasi ke user yang membayar
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('citizen.payment.history', compact('History'));
+}
 
     /**
      * Display the specified resource.

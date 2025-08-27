@@ -1,15 +1,14 @@
 @extends('rt_leader.master_rt-leader')
 
 @push('link')
-<link rel="stylesheet" href="{{ asset('vuexy/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-<link rel="stylesheet" href="{{ asset('modernize/assets/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
-<link rel="stylesheet" href="{{ asset('modernize/assets/libs/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
+<link rel="stylesheet" href="{{ asset('modernize/assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
 @endpush
 
 @section('content')
 <div class="body-wrapper mt-4">
   <div class="container-fluid">
+
+    {{-- Header Selamat Datang --}}
     <div class="d-flex align-items-center gap-4 mb-4">
       <div class="position-relative">
         <div class="border border-2 border-primary rounded-circle">
@@ -17,105 +16,147 @@
         </div>
       </div>
       <div>
-        <h3 class="fw-semibold">Selamat Datang {{ auth()->user()->name }}!</h3>
+        @php
+    $user = auth()->user();
+    $role = $user->getRoleNames()->first(); // misalnya "rt_leader"
+    $rtNumber = $user->areaScope->asc_number ?? '-';
+
+    // Ubah role menjadi label
+    $jabatan = match ($role) {
+        'rt_leader' => "Ketua RT $rtNumber",
+        'treasurer' => "Bendahara RT $rtNumber",
+        'citizen' => "Warga RT $rtNumber",
+        default => "RT $rtNumber"
+    };
+@endphp
+<h3 class="fw-semibold">Selamat Datang {{ auth()->user()->full_name }}!</h3>
+
         @php
         \Carbon\Carbon::setLocale('id');
         $tanggal = \Carbon\Carbon::now();
         @endphp
-        <span>Semangat beraktivitas - {{ $tanggal->translatedFormat('d F Y') }}</span>
+        <span>{{ $jabatan }}, Semangat beraktivitas - {{ $tanggal->translatedFormat('d F Y') }}</span>
       </div>
     </div>
 
-    <div class="owl-carousel counter-carousel owl-theme mt-4">
-      <div class="item">
-        <div class="card border-0 zoom-in bg-primary-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-user-male.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-primary mb-1">Employees</p>
-            <h5 class="fw-semibold text-primary mb-0">96</h5>
+    {{-- Statistik --}}
+    <div class="row g-3">
+      <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-1">Jumlah Warga</h6>
+            <h4 class="fw-bold">{{ $jumlahWarga }}</h4>
           </div>
         </div>
       </div>
-      <div class="item">
-        <div class="card border-0 zoom-in bg-warning-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-briefcase.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-warning mb-1">Clients</p>
-            <h5 class="fw-semibold text-warning mb-0">3,650</h5>
+      <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-1">Jumlah KK</h6>
+            <h4 class="fw-bold">{{ $jumlahKK }}</h4>
           </div>
         </div>
       </div>
-      <div class="item">
-        <div class="card border-0 zoom-in bg-info-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-mailbox.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-info mb-1">Projects</p>
-            <h5 class="fw-semibold text-info mb-0">356</h5>
+      <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-1">Warga Belum Diverifikasi</h6>
+            <h4 class="fw-bold">{{ $wargaverif }}</h4>
           </div>
         </div>
       </div>
-      <div class="item">
-        <div class="card border-0 zoom-in bg-danger-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-favorites.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-danger mb-1">Events</p>
-            <h5 class="fw-semibold text-danger mb-0">696</h5>
+      <div class="col-md-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-1">Pengajuan Air (Pending)</h6>
+            <h4 class="fw-bold">{{ $pengajuanPending }}</h4>
           </div>
         </div>
       </div>
-      <div class="item">
-        <div class="card border-0 zoom-in bg-primary-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-user-male.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-primary mb-1">Jumlah Warga</p>
-            <h5 class="fw-semibold text-primary mb-0">{{ $jumlahWarga }}</h5>
+      {{-- <div class="col-md-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h6 class="mb-1">Total Retribusi Bulan Ini</h6>
+            <h4 class="fw-bold">Rp{{ number_format($totalRetribusi, 0, ',', '.') }}</h4>
+          </div>
+        </div>
+      </div> --}}
+    </div>
+
+    {{-- Chart Area --}}
+    <div class="row mt-4 g-4">
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">Grafik Pengajuan Air per Bulan</h5>
+            <canvas id="pengajuanChart"></canvas>
           </div>
         </div>
       </div>
-      
-      <div class="item">
-        <div class="card border-0 zoom-in bg-info-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-home.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-info mb-1">Jumlah KK</p>
-            <h5 class="fw-semibold text-info mb-0">{{ $jumlahKK }}</h5>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="card border-0 zoom-in bg-success-subtle shadow-none">
-          <div class="card-body text-center">
-            <img src="{{ asset('modernize/assets/images/svgs/icon-speech-bubble.svg') }}" width="50" height="50" class="mb-3" alt="icon" />
-            <p class="fw-semibold fs-3 text-success mb-1">Payroll</p>
-            <h5 class="fw-semibold text-success mb-0">$96k</h5>
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title">Grafik Pendaftaran Warga per Bulan</h5>
+            <canvas id="pendaftaranChart"></canvas>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 @endsection
 
 @push('script')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('modernize/assets/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  $(document).ready(function(){
-    $('.owl-carousel').owlCarousel({
-      loop: true,
-      margin: 10,
-      nav: false,
-      dots: true,
-      autoplay: true,
-      autoplayTimeout: 3000,
-      responsive: {
-        0: { items: 1 },
-        576: { items: 2 },
-        768: { items: 3 },
-        992: { items: 4 },
-        1200: { items: 5 }
+  const bulan = {!! json_encode($bulanLabels) !!};
+  const dataPengajuan = {!! json_encode($jumlahPengajuanArray) !!};
+  const dataPendaftaran = {!! json_encode($jumlahPendaftaranArray) !!};
+
+  // Area Chart Pengajuan Air
+  new Chart(document.getElementById('pengajuanChart'), {
+    type: 'line',
+    data: {
+      labels: bulan,
+      datasets: [{
+        label: 'Pengajuan Air',
+        data: dataPengajuan,
+        backgroundColor: 'rgba(93, 135, 255, 0.2)',
+        borderColor: '#5D87FF',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 } }
       }
-    });
+    }
+  });
+
+  // Bar Chart Pendaftaran Warga
+  new Chart(document.getElementById('pendaftaranChart'), {
+    type: 'bar',
+    data: {
+      labels: bulan,
+      datasets: [{
+        label: 'Pendaftaran Warga',
+        data: dataPendaftaran,
+        backgroundColor: 'rgba(40, 167, 69, 0.6)',
+        borderColor: '#28a745',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 } }
+      }
+    }
   });
 </script>
 @endpush

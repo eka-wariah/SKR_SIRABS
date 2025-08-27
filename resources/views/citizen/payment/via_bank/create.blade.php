@@ -32,27 +32,26 @@
             <label for="kategori" class="form-label col-sm-3 col-form-label">Kategori Pembayaran</label>
             <div class="col-sm-9">
                 @if($PaymentCategory->isEmpty())
-            {{-- Jika semua kategori sudah dibayar --}}
-            <div class="alert alert-success">
-                Semua kategori pembayaran sudah dibayar untuk bulan ini.
-            </div>
-        @else
-            {{-- Jika masih ada kategori yang belum dibayar --}}
-            @if(!$PayWater)
-                <div class="alert alert-info">
-                    Kamu belum terdaftar sebagai pengguna layanan air. Kategori pembayaran air tidak tersedia.
-                </div>
-            @endif
+    <div class="alert alert-success">
+        Semua kategori pembayaran sudah dibayar untuk bulan ini.
+    </div>
+@else
+    @if(!$PayWater)
+        <div class="alert alert-info">
+            Kamu belum terdaftar sebagai pengguna layanan air. Kategori pembayaran air tidak tersedia.
+        </div>
+    @endif
 
-            <select name="payment_category_id" id="kategori" class="form-control" required>
-                <option value="">-- Pilih Kategori --</option>
-                @foreach($PaymentCategory as $kategori)
-                    <option value="{{ $kategori->pym_id }}" data-total="{{ $kategori->pym_total }}">
-                        {{ $kategori->pym_name }} - Rp {{ number_format($kategori->pym_total, 0, ',', '.') }}
-                    </option>
-                @endforeach
-            </select>
-        @endif
+    <select name="payment_category_id" id="kategori" class="form-control" required>
+        <option value="">-- Pilih Kategori --</option>
+        @foreach($PaymentCategory as $kategori)
+            <option value="{{ $kategori->pym_id }}" data-total="{{ $kategori->pym_total }}">
+                {{ $kategori->pym_name }} - Rp {{ number_format($kategori->pym_total, 0, ',', '.') }}
+            </option>
+        @endforeach
+    </select>
+@endif
+
 
         </div>
           </div>

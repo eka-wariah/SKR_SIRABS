@@ -36,8 +36,8 @@ public function household()
     }
 
     public function paidBy()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+{
+    return $this->belongsTo(User::class, 'pyn_paid_by', 'usr_id');
+}
 
 }

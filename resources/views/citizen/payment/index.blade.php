@@ -44,7 +44,7 @@
         </div>
         <div class="card shadow-none mb-0">
           <div class="card-body p-0">
-            <a href="/citizen/payment/create_via_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1"> View Balance</a>
+            <a href="/citizen/payment/create_via_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1">Bayar Retribusi</a>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@
         <div class="card shadow-none mb-0">
           <div class="card-body p-6">
             @if($saldoBankSampah >= $biayaYangDibutuhkan)
-              <a href="/citizen/payment/create_via_Waste_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1"> View Balance</a>
+              <a href="/citizen/payment/create_via_Waste_Bank" class="btn bg-primary-subtle text-primary w-100 mt-1">Bayar Retribusi</a>
             @else
               <button class="btn bg-primary-subtle text-primary w-100 mt-1" disabled>Saldo Tidak Cukup</button>
             @endif

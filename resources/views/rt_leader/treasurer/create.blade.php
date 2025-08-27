@@ -1,4 +1,4 @@
-@extends('rw_leader.master_rw-leader')
+@extends('rt_leader.master_rt-leader')
 
 @section('title', 'Tambah Bendahara')
 
@@ -12,21 +12,22 @@
             <form action="{{ route('treasurer.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
+
+                    {{-- Ambil area scope dari RT yang login --}}
                     <div class="mb-4">
-                        <label for="asc_id" class="form-label">Pilih Area Scope:</label>
-                        <select name="asc_id" id="area_scope_id" class="form-control" required>
-                            <option value="">-- Pilih Area Scope --</option>
-                            @foreach ($areaScopes as $area)
-                                <option value="{{ $area->asc_id }}">{{ $area->asc_level }} {{ $area->asc_number }}</option>
-                            @endforeach
+                        <label for="asc_id" class="form-label">Wilayah RT:</label>
+                        <select name="asc_id" id="area_scope_id" class="form-control" disabled>
+                            <option value="{{ $rtArea->asc_id }}">
+                                {{ $rtArea->asc_level }} {{ $rtArea->asc_number }}
+                            </option>
                         </select>
+                        <input type="hidden" name="asc_id" value="{{ $rtArea->asc_id }}">
                     </div>
 
                     <div class="mb-4">
                         <label for="usr_id" class="form-label">Pilih Warga:</label>
-                        <select name="usr_id" id="usr_id" class="form-control" required>
+                        <select name="usr_id" id="usr_id" class="form-control" required style="width: 100%;">
                             <option value="">-- Pilih Warga --</option>
-                            <!-- Diisi dari AJAX -->
                         </select>
                     </div>
 
@@ -40,29 +41,32 @@
 </div>
 @endsection
 
-@push('script')
-<script>
-    document.getElementById('area_scope_id').addEventListener('change', function() {
-        let areaScopeId = this.value;
-        let citizenSelect = document.getElementById('usr_id');
-        citizenSelect.innerHTML = '<option value="">Loading...</option>';
+@push('link')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
 
-        if (areaScopeId) {
-            fetch(`/get-citizens/${areaScopeId}`)
-                .then(response => response.json())
-                .then(data => {
-                    citizenSelect.innerHTML = '<option value="">-- Pilih Warga --</option>';
-                    data.forEach(function(citizen) {
-                        citizenSelect.innerHTML += `<option value="${citizen.usr_id}">${citizen.name}</option>`;
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    citizenSelect.innerHTML = '<option value="">Gagal memuat warga</option>';
-                });
-        } else {
-            citizenSelect.innerHTML = '<option value="">-- Pilih Warga --</option>';
-        }
+@push('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const wargaSelect = $('#usr_id');
+        const areaScopeId = $('#area_scope_id').val();
+
+        wargaSelect.select2({
+            placeholder: '-- Pilih Warga --',
+            width: '100%',
+            ajax: {
+                url: `/get-citizens/${areaScopeId}`,
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
     });
 </script>
 @endpush

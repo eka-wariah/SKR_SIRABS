@@ -21,8 +21,9 @@
   
     <ul class="menu-inner py-1">
       <!-- Dashboards -->
+      <br>
       <li class="menu-item">
-        <a href="app-email.html" class="menu-link">
+        <a href="/rt_leader" class="menu-link">
           <i class="menu-icon icon-base ti tabler-home"></i>
           <div data-i18n="Dashboard">Dashboard</div>
         </a>
@@ -35,22 +36,29 @@
       <li class="menu-item">
         <a
           href="/rt_leader/treasurer" class="menu-link">
-          <i class="menu-icon icon-base ti tabler-map"></i>
+          <iconify-icon icon="tabler:user-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
           <div data-i18n="Data Bendahara">Data Bendahara</div>
         </a>
       </li>
-
+      
       <li class="menu-header small">
         <span class="menu-header-text" data-i18n="Warga yang Registrasi">Warga yang Registrasi</span>
       </li>
       <li class="menu-item">
         <a
           href="/rt_leader/citizen" class="menu-link">
-          <i class="menu-icon icon-base ti tabler-map"></i>
+          <iconify-icon icon="tabler:users-group" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
           <div data-i18n="Data Warga">Data Warga</div>
         </a>
       </li>
-
+      <li class="menu-item">
+        <a
+          href="/rt_leader/approve" class="menu-link">
+          <iconify-icon icon="tabler:user-check" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
+          <div data-i18n="Verifikasi Data Warga">Verifikasi Data Warga</div>
+        </a>
+      </li>
+      
       <!-- Forms & Tables -->
       <li class="menu-header small">
         <span class="menu-header-text" data-i18n="Pengajuan Registrasi Air">Pengajuan Registrasi Air</span>
@@ -58,7 +66,7 @@
       <li class="menu-item">
         <a
           href="/rt_leader/registration_water"class="menu-link">
-          <i class="menu-icon icon-base ti tabler-file-description"></i>
+          <iconify-icon icon="tabler:droplet-down" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
           <div data-i18n="Data Pengajuan">Data Pengajuan</div>
         </a>
       </li>
@@ -69,10 +77,9 @@
           </li>
           <li class="menu-item">
             <a
-              href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-              target="_blank"
+              href="/rt_leader/retributions"
               class="menu-link">
-              <i class="menu-icon icon-base ti tabler-file-description"></i>
+              <iconify-icon icon="tabler:pencil-dollar" class="menu-icon" style="font-size: 1.5rem;"></iconify-icon>
               <div data-i18n="Laporan Retribusi">Laporan Retribusi</div>
             </a>
           </li>

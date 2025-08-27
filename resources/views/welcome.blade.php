@@ -1,4 +1,4 @@
-<!doctype html>
+{{-- <!doctype html>
 
 <html
   lang="en"
@@ -14,7 +14,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Demo: Landing Page - Front Pages | Vuexy - Bootstrap Dashboard PRO</title>
+    <title>Dashboard</title>
 
     <meta name="description" content="" />
 
@@ -89,38 +89,15 @@
             <a href="landing-page.html" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <span class="text-primary">
-                  <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
-                      fill="currentColor" />
-                    <path
-                      opacity="0.06"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z"
-                      fill="#161616" />
-                    <path
-                      opacity="0.06"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z"
-                      fill="#161616" />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
-                      fill="currentColor" />
-                  </svg>
+                
                 </span>
               </span>
-              <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1">Vuexy</span>
+              <span class="app-brand-text demo menu-text fw-bold ms-2 ps-1"></span>
             </a>
           </div>
           <!-- Menu logo wrapper: End -->
           <!-- Menu wrapper: Start -->
-          <div class="collapse navbar-collapse landing-nav-menu" id="navbarSupportedContent">
+          {{-- <div class="collapse navbar-collapse landing-nav-menu" id="navbarSupportedContent">
             <button
               class="navbar-toggler border-0 text-heading position-absolute end-0 top-0 scaleX-n1-rtl p-2"
               type="button"
@@ -133,19 +110,19 @@
             </button>
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <a class="nav-link fw-medium" aria-current="page" href="landing-page.html#landingHero">Home</a>
+                <a class="nav-link fw-medium" aria-current="page" href="landing-page.html#landingHero"></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-medium" href="landing-page.html#landingFeatures">Features</a>
+                <a class="nav-link fw-medium" href="landing-page.html#landingFeatures"></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-medium" href="landing-page.html#landingTeam">Team</a>
+                <a class="nav-link fw-medium" href="landing-page.html#landingTeam"></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-medium" href="landing-page.html#landingFAQ">FAQ</a>
+                <a class="nav-link fw-medium" href="landing-page.html#landingFAQ"></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link fw-medium" href="landing-page.html#landingContact">Contact us</a>
+                <a class="nav-link fw-medium" href="landing-page.html#landingContact"></a>
               </li>
               <li class="nav-item mega-dropdown">
                 <a
@@ -154,7 +131,7 @@
                   aria-expanded="false"
                   data-bs-toggle="mega-dropdown"
                   data-trigger="hover">
-                  <span data-i18n="Pages">Pages</span>
+                  <span data-i18n="Pages"></span>
                 </a>
                 <div class="dropdown-menu p-4 p-xl-8">
                   <div class="row gy-4">
@@ -165,31 +142,31 @@
                             ><i class="icon-base ti tabler-layout-grid icon-lg"></i
                           ></span>
                         </div>
-                        <span class="ps-1">Other</span>
+                        <span class="ps-1"></span>
                       </div>
                       <ul class="nav flex-column">
                         <li class="nav-item">
                           <a class="nav-link mega-dropdown-link" href="pricing-page.html">
                             <i class="icon-base ti tabler-circle me-1 icon-12px"></i>
-                            <span data-i18n="Pricing">Pricing</span>
+                            <span data-i18n="Pricing"></span>
                           </a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link mega-dropdown-link" href="payment-page.html">
                             <i class="icon-base ti tabler-circle me-1 icon-12px"></i>
-                            <span data-i18n="Payment">Payment</span>
+                            <span data-i18n="Payment"></span>
                           </a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link mega-dropdown-link" href="checkout-page.html">
                             <i class="icon-base ti tabler-circle me-1 icon-12px"></i>
-                            <span data-i18n="Checkout">Checkout</span>
+                            <span data-i18n="Checkout"></span>
                           </a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link mega-dropdown-link" href="help-center-landing.html">
                             <i class="icon-base ti tabler-circle me-1 icon-12px"></i>
-                            <span data-i18n="Help Center">Help Center</span>
+                            <span data-i18n="Help Center"></span>
                           </a>
                         </li>
                       </ul>
@@ -201,7 +178,7 @@
                             ><i class="icon-base ti tabler-lock-open icon-lg"></i
                           ></span>
                         </div>
-                        <span class="ps-1">Auth Demo</span>
+                        <span class="ps-1"></span>
                       </div>
                       <ul class="nav flex-column">
                         <li class="nav-item">
@@ -210,7 +187,7 @@
                             href="../vertical-menu-template/auth-login-basic.html"
                             target="_blank">
                             <i class="icon-base ti tabler-circle me-1 icon-12px"></i>
-                            Login (Basic)
+                            
                           </a>
                         </li>
                         <li class="nav-item">
@@ -386,7 +363,7 @@
                 <a class="nav-link fw-medium" href="../vertical-menu-template/index.html" target="_blank">Admin</a>
               </li>
             </ul>
-          </div>
+          </div> 
           <div class="landing-menu-overlay d-lg-none"></div>
           <!-- Menu wrapper: End -->
           <!-- Toolbar: Start -->
@@ -628,7 +605,7 @@
         </div>
       </section>
       
-      {{-- FITUR UNGGULAN --}}
+      {{-- FITUR UNGGULAN 
       <section class="py-5" id="landingFeatures">
         <div class="container">
           <div class="text-center mb-5">
@@ -655,7 +632,7 @@
         </div>
       </section>
       
-      {{-- TENTANG SISTEM --}}
+      {{-- TENTANG SISTEM 
       <section class="py-5 bg-light" id="tentang">
         <div class="container d-flex flex-column flex-md-row align-items-center">
           <div class="col-md-6 mb-4 mb-md-0">
@@ -673,7 +650,7 @@
         </div>
       </section>
       
-      {{-- CARA KERJA --}}
+      {{-- CARA KERJA 
       <section class="py-5" id="howitworks">
         <div class="container text-center">
           <h2 class="fw-bold mb-4">Cara Kerja Sistem</h2>
@@ -703,7 +680,7 @@
         </div>
       </section>
       
-      {{-- AJAKAN BERGABUNG --}}
+      {{-- AJAKAN BERGABUNG 
       <section class="py-5 bg-primary text-white text-center">
         <div class="container">
           <h2 class="fw-bold">Gabung Sekarang dan Nikmati Kemudahan!</h2>
@@ -738,4 +715,136 @@
       <script src="{{ asset('vuexy/assets/js/front-page-landing.js')}}"></script>
     </body>
   </html>
-  
+   --}}
+
+   <!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon icon-->
+  <link rel="shortcut icon" type="image/png" href="{{ asset('modernize/assets/images/logos/favicon.png')}}" />
+
+  <!-- Core Css -->
+  <link rel="stylesheet" href="{{ asset('modernize/assets/css/styles.css')}}" />
+
+  <title>Modernize Bootstrap Admin</title>
+  <!-- Owl Carousel  -->
+  <link rel="stylesheet" href="{{ asset('modernize/assets/libs/owl.carousel/dist/assets/owl.carousel.min.css')}}" />
+  <link rel="stylesheet" href="{{ asset('modernize/assets/libs/aos/dist/aos.css')}}" />
+</head>
+
+<body>
+  <div class="toast toast-onload align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body hstack align-items-start gap-6">
+      <i class="ti ti-alert-circle fs-6"></i>
+      <div>
+        <h5 class="text-white fs-3 mb-1">Welcome to Modernize</h5>
+        <h6 class="text-white fs-2 mb-0">Easy to costomize the Template!!!</h6>
+      </div>
+      <button type="button" class="btn-close btn-close-white fs-2 m-0 ms-auto shadow-none" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+  <!-- Preloader -->
+  <div class="preloader">
+    <img src="{{ asset('modernize/assets/images/logos/favicon.png')}}" alt="loader" class="lds-ripple img-fluid" />
+  </div>
+  <div id="main-wrapper flex-column">
+    <header class="header">
+      <nav class="navbar navbar-expand-lg py-0">
+        <div class="container">
+          <a class="navbar-brand me-0 py-0" href="index.html">
+            <img src="{{ asset('vuexy/assets/img/illustrations/logo10.png') }}"
+                 alt="Logo SIRABAS"
+                 style="max-height: 50px; max-width: 50px; border-radius: 50%; object-fit: contain;" />
+            <img >
+            <span class="app-brand-text demo menu-text fw-bold ms-3">SIRABAS</span>
+          </a>
+          <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="ti ti-menu-2 fs-9"></i>
+          </button>
+          <button class="navbar-toggler border-0 p-0 shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <i class="ti ti-menu-2 fs-9"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav align-items-center mb-2 mb-lg-0 ms-auto">
+             
+              
+             
+              <li class="nav-item ms-2">
+                <a class="btn btn-primary fs-3 rounded btn-hover-shadow px-3 py-2" href="../main/authentication-login.html">Login</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="body-wrapper overflow-hidden pt-0">
+      <section class="hero-section position-relative overflow-hidden mb-0 mb-lg-5">
+        <div class="container">
+          <div class="row align-items-start">
+            <div class="col-xl-6">
+              <div class="hero-content my-5 my-xl-0">
+                {{-- <h6 class="d-flex align-items-center gap-2 fs-4 fw-semibold mb-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
+                  <i class="ti ti-rocket text-secondary fs-6"></i>Kick start
+                  your project with
+                </h6> --}}
+                <br>
+                <br><br><br>
+                <h1 class="fw-bolder mb-7 fs-13" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
+                  Sistem Informasi Pembayaran
+                  <span class="text-primary">Retribusi Air, Sampah dan Bank sampah</span>
+                  RW 04
+                </h1>
+                <p class="fs-5 mb-5 text-dark fw-normal" data-aos="fade-up" data-aos-delay="600" data-aos-duration="1000">
+                  Membayar iuran air, sampah, dan menabung sampah kini lebih mudah
+                  <br>
+                  Mulai gabung
+                </p>
+                
+                <div class="d-sm-flex align-items-center gap-3" data-aos="fade-up" data-aos-delay="700" data-aos-duration="1000">
+                  <a class="btn btn-primary px-5 py-6 btn-hover-shadow d-block mb-3 mb-sm-0" href="/login">Login</a>
+                  <a class="btn btn-outline-primary d-block scroll-link px-7 py-6" href="/register">Daftar</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6 d-none d-xl-block">
+              <div class="hero-img-slide position-relative ">
+                <div class="d-flex flex-row">
+                  <div class="">
+                    <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
+                      <img src="{{ asset('modernize/assets/images/products/gambar landing page.png') }}" 
+     alt="modernize-img" 
+     class="img-fluid" 
+     style="object-fit: contain; max-height: 100%; max-width: 100%;" />
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+  <div class="dark-transparent sidebartoggler"></div>
+  <script src="{{ asset('modernize/assets/js/vendor.min.js')}}"></script>
+  <!-- Import Js Files -->
+  <script src="{{ asset('modernize/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ asset('modernize/assets/libs/simplebar/dist/simplebar.min.js')}}"></script>
+  <script src="{{ asset('modernize/assets/js/theme/app.init.js')}}"></script>
+  <script src="{{ asset('modernize/assets/js/theme/theme.js')}}"></script>
+  <script src="{{ asset('modernize/assets/js/theme/app.min.js')}}"></script>
+
+  <!-- solar icons -->
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <script src="{{ asset('modernize/assets/libs/owl.carousel/dist/owl.carousel.min.js')}}"></script>
+  <script src="{{ asset('modernize/assets/libs/aos/dist/aos.js')}}"></script>
+  <script src="{{ asset('modernize/assets/js/landingpage/landingpage.js')}}"></script>
+</body>
+
+</html>
